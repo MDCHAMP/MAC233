@@ -1,0 +1,9 @@
+// not inside any functions: Global scope
+// accessible from anywhere
+int wheel_rotations = 0;
+
+void setup() {
+  // inside the setup function: Setup scope
+  // only accessible from setup function
+  int setup_rotations = 1;
+}

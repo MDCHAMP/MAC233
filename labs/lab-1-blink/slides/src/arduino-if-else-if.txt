@@ -1,0 +1,9 @@
+if (condition1) {
+    // do something if condition1 is true
+} else if (condition2) {
+    // do something if condition1 is false
+    // but condition2 is true
+} else {
+    // do something if condition1 is false
+    // and condition2 is false
+}

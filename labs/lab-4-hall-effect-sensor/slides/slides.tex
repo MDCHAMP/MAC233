@@ -1,0 +1,152 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usepackage{tikz-layers}
+\usepackage{pifont}
+\usepackage{pgfpages}
+\usepackage{pgfplots}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\usepackage{qrcode}
+\usepackage{caption}
+\usepackage{minted}
+\usepackage[svgnames]{xcolor}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{decorations.pathreplacing}
+
+\usetheme{drgtheme}
+
+%setup cover page variables
+\title{MAC 233: Hall Effect Sensor Lab}
+\author{
+    Dr Dan Brennan
+}
+\institute[UoS-DRG]{
+    School of Mechanical, Aerospace, and Civil Engineering,\\
+    University of Sheffield, UK
+}
+\date{MAC 233: \hspace{0.1em}\textbf{05/11/2025}}
+%setup footer variables
+\runninginstitute{MAC 233, School of MAC, University of Sheffield}
+\email{d.s.brennan@sheffield.ac.uk}
+
+%Begin Document
+\begin{document}
+
+%Create Title Page
+\maketitle
+
+\begin{frame}{MAC 233: Labs Overview}
+    \begin{center}
+        \begin{tikzpicture}[
+            timeline/.style={color=black, line width=0.4mm},
+            pastnode/.style={align=center, color=darkgray},
+            currentnode/.style={align=center, color=purple},
+            futurenode/.style={align=center, color=black}
+        ]
+            %line
+            \draw[timeline] (-6, 0) -- (6, 0);
+
+            % week ticks
+            \foreach \x in {-6, -4, -2, 0, 2, 4, 6}{
+                \draw[timeline] (\x, -0.28) -- (\x, 0.28);
+            }
+
+            % weeks (below the line)
+            \node[pastnode, below] at (-6, -0.5) {Week 3};
+            \node[pastnode, below] at (-4, -0.5) {Week 4};
+            \node[pastnode, below] at (-2, -0.5) {Week 5};
+            \node[currentnode, below] at (0, -0.5) {Week 6};
+            \node[futurenode, below] at (2, -0.5) {Week 7};
+            \node[futurenode, below] at (4, -0.5) {Week 8};
+            \node[futurenode, below] at (6, -0.5) {Week 9};
+
+            % activities (above the line)
+            \node[pastnode, above] at (-6, 0.5) {Arduino\\introduction};
+            \node[pastnode, above] at (-4, 0.5) {LED};
+            \node[pastnode, above] at (-2, 0.5) {Servo};
+            \node[currentnode, above] at (0, 0.5) {Hall Effect\\Sensors};
+
+            % phases
+            \draw[timeline, decorate, decoration={brace, amplitude=6pt, mirror}] (-6, -1.6) -- (0.9, -1.6);
+            \node[futurenode, below] at (-2.55, -1.85) {Standalone\\lab activities};
+            \draw[timeline, decorate, decoration={brace, amplitude=6pt, mirror}] (1.1, -1.6) -- (6, -1.6);
+            \node[futurenode, below] at (3.55, -1.85) {Developing the \\ control system};
+
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Today's Lab: Prerequisites}
+    \Large
+    This lab doesn't require any code from previous labs; however, it does expect you to have completed these, as common code repeated from previous labs will not be explained in detail again here.\\
+    
+    Out of your Arduino pack, you will need: 1 Arduino, 1 A3144 hall effect sensor, 1 LED, 1 $10K\Omega$ resistor, 1 $220\Omega$ resistor, and 5 jumper cables.
+\end{frame}
+
+\begin{frame}{Today's Lab: Objectives}
+    \Large
+    The objective of today's lab is to learn how to use an interrupt to record a value of a sensor whose value is changed via an external event: \url{https://docs.arduino.cc/language-reference/en/functions/external-interrupts/attachInterrupt/}.
+\end{frame}
+
+\begin{frame}{Lab 4: Hall Effect}
+    \begin{center}
+        Login to Blackboard: \url{https://vle.shef.ac.uk/}
+        \begin{tikzpicture}[
+            highlight/.style={draw=purple, line width=.25mm},
+        ]
+            % screenshot
+            \node[] at (0, 0) {\includegraphics[width=.7\textwidth]{./images/lab-4.png}};
+            % highlight
+            \draw[highlight] (-4.15, -1.65) rectangle ++(2, 0.4);
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Wiring Diagram}
+    \vspace{-.5em}
+    \begin{center}
+        \begin{tikzpicture}[
+            scale=1.65, transform shape, rotate=90,
+            wire/.style={line width=.8mm},
+            leg/.style={draw=DimGray},
+            jumper/.style={draw=LimeGreen},
+        ]
+
+
+            %% mask out breadboard
+            \filldraw[fill=white, draw=white] (-.62, -1.49) rectangle (-.44, -0.98);
+
+            %% legs 5 per span y = 0.188, per span x = 0.183
+            \draw[wire, leg] (.975,-0.515) -- (.975, 1.16); %220 resistor
+            \draw[wire, leg] (.792,-1.61) -- (.792, -0.49);%led
+            \draw[wire, leg] (-.495,-1.61) -- (-.495, -0.86);%hall effect
+            \draw[wire, leg] (-.69,-1.23) -- (-.59, -1.23);%hall effect
+            \draw[wire, leg] (-.865,-1.61) -- (-.865, -0.86);%10k resistor
+
+            %% cables
+            \draw[wire, jumper] (.607,-1.61) -- (.607, 0.604);
+            \draw[wire, jumper] (-1.05,-1.244) -- (-1.05, 0.238);
+            \draw[wire, jumper] (-.31,-0.88) -- (-.31,-0.32) -- (-.865,-0.32) -- (-.865, 0.604);
+            \draw[wire, jumper] (-.31,-1.61) -- (.422,-1.61) -- (.422,-0.307) to[out=50, in=130] (.792,-0.307) -- (.792, 0.792);
+
+            %% components
+            \node[] at (-.865, -1.23) {\includegraphics[angle=90, origin=c,width=1.75mm]{./images/resistor-10k.png}}; %10k resistor
+            \fill[fill=red] (-.44,-1.44) -- (-.44, -1.04) -- (-.54, -1.04) -- (-.59, -1.14) -- (-.59, -1.34) -- (-.54, -1.44) -- cycle; %hall effect
+            \filldraw[fill=red, draw=black] (.79,-1.05) circle (1.25mm); %led
+            \node[] at (.975, 0.323) {\includegraphics[angle=90, origin=c,width=1.75mm]{./images/resistor-220.png}}; %220 resistor
+            \node[] at (-.13, 1.43) {\includegraphics[angle=90, origin=c, width=3.38em]{./images/nano.png}}; %nano
+
+            %% breadboard background
+            \begin{scope}[on background layer]
+                \node[] at (0, 0) {\includegraphics[width=10em]{./images/breadboard.png}};
+            \end{scope}
+
+        \end{tikzpicture}
+    \end{center}
+    \tiny
+    Breadboard source: \url{https://freesvg.org/breadboard}, Resistor source \url{https://freesvg.org/resistor-330-ohm}.
+\end{frame}
+
+\end{document}

@@ -1,0 +1,8 @@
+int led_on_time = 0;
+if(output[current_char] == '.'){
+  Serial.println("Dot");
+  led_on_time = DOT_UNITS * TIME_UNIT;
+} else if (output[current_char] == '-'){
+  Serial.println("Dash");
+  led_on_time = DASH_UNITS * TIME_UNIT;
+}

@@ -1,0 +1,146 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usepackage{tikz-layers}
+\usepackage{pifont}
+\usepackage{pgfpages}
+\usepackage{pgfplots}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\usepackage{qrcode}
+\usepackage{caption}
+\usepackage{minted}
+\usepackage[svgnames]{xcolor}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{decorations.pathreplacing}
+
+\usetheme{drgtheme}
+
+%setup cover page variables
+\title{MAC 233: Servo Lab}
+\author{
+    Dr Dan Brennan
+}
+\institute[UoS-DRG]{
+    School of Mechanical, Aerospace, and Civil Engineering,\\
+    University of Sheffield, UK
+}
+\date{MAC 233: \hspace{0.1em}\textbf{29/10/2025}}
+%setup footer variables
+\runninginstitute{MAC 233, School of MAC, University of Sheffield}
+\email{d.s.brennan@sheffield.ac.uk}
+
+%Begin Document
+\begin{document}
+
+%Create Title Page
+\maketitle
+
+\begin{frame}{MAC 233: Labs Overview}
+    \begin{center}
+        \begin{tikzpicture}[
+            timeline/.style={color=black, line width=0.4mm},
+            pastnode/.style={align=center, color=darkgray},
+            currentnode/.style={align=center, color=purple},
+            futurenode/.style={align=center, color=black}
+        ]
+            %line
+            \draw[timeline] (-6, 0) -- (6, 0);
+
+            % week ticks
+            \foreach \x in {-6, -4, -2, 0, 2, 4, 6}{
+                \draw[timeline] (\x, -0.28) -- (\x, 0.28);
+            }
+
+            % weeks (below the line)
+            \node[pastnode, below] at (-6, -0.5) {Week 3};
+            \node[pastnode, below] at (-4, -0.5) {Week 4};
+            \node[currentnode, below] at (-2, -0.5) {Week 5};
+            \node[futurenode, below] at (0, -0.5) {Week 6};
+            \node[futurenode, below] at (2, -0.5) {Week 7};
+            \node[futurenode, below] at (4, -0.5) {Week 8};
+            \node[futurenode, below] at (6, -0.5) {Week 9};
+
+            % activities (above the line)
+            \node[pastnode, above] at (-6, 0.5) {Arduino\\introduction};
+            \node[pastnode, above] at (-4, 0.5) {LED};
+            \node[currentnode, above] at (-2, 0.5) {Servo};
+            \node[futurenode, above] at (0, 0.5) {Hall Effect\\Sensors};
+
+            % phases
+            \draw[timeline, decorate, decoration={brace, amplitude=6pt, mirror}] (-6, -1.6) -- (0.9, -1.6);
+            \node[futurenode, below] at (-2.55, -1.85) {Standalone\\lab activities};
+            \draw[timeline, decorate, decoration={brace, amplitude=6pt, mirror}] (1.1, -1.6) -- (6, -1.6);
+            \node[futurenode, below] at (3.55, -1.85) {Developing the \\ control system};
+
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Today's Lab: Prerequisites}
+    \Large
+    This worksheet builds upon the theory of how to use an external pin that was covered in the Lab 2 worksheet. Whilst you won't need any code from Lab 2, you will need to have covered how to use an electronic breadboard and how to wire up an external output to an Arduino pin. \\
+    
+    Out of your Arduino pack, you will need: 1 Arduino, 1 Servo, and 3 jumper cables.
+\end{frame}
+
+\begin{frame}{Today's Lab: Objectives}
+    \Large
+    The objective of today's lab is to learn how to control a servo using the inbuilt Arduino Servo Library: \url{https://docs.arduino.cc/libraries/servo/}.\\
+
+    The worksheet will take you through the steps of how to connect an external servo to your Arduino and create a sketch that rotates the servo in increments of 30 degrees.
+\end{frame}
+
+\begin{frame}{Lab 3: Servo}
+    \begin{center}
+        Login to Blackboard: \url{https://vle.shef.ac.uk/}
+        \begin{tikzpicture}[
+            highlight/.style={draw=purple, line width=.25mm},
+        ]
+            % screenshot
+            \node[] at (0, 0) {\includegraphics[width=.7\textwidth]{./images/lab-3.png}};
+            % highlight
+            \draw[highlight] (-4.15, -1.2) rectangle ++(2, 0.4);
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Wiring Diagram}
+    \vspace{-.5em}
+    \begin{center}
+        \begin{tikzpicture}[
+            scale=1.65, transform shape, rotate=90,
+            wire/.style={line width=.8mm},
+            jumper/.style={draw=LimeGreen},
+        ]
+
+            %% mask out breadboard
+            \filldraw[fill=white, draw=white] (0.54, -1.9) rectangle (1.04, -1.5);
+
+            %% cables
+            \draw[wire, jumper] (0.69, -1.75) -- (.607,-1.5) -- (.607, 0.604);
+            \draw[wire, jumper] (0.792, -1.75) -- (.792, -0.49) to[out=130, in=50] (.42, -0.49) -- (-.87, -0.49) -- (-.87, 0.604);
+            \draw[wire, jumper] (0.89, -1.75) -- (.975,-1.5) -- (.975, 2.08);
+
+            %% components
+            \draw[wire, draw=brown] (0.69,-2.32) -- (0.69, -1.75);
+            \draw[wire, draw=red] (0.79,-2.32) -- (0.79, -1.75);
+            \draw[wire, draw=orange] (0.89,-2.32) -- (0.89, -1.75);
+            \filldraw[fill=black] (0.6, -1.8) rectangle (0.98, -1.6);
+            \filldraw[fill=blue, draw=black] (-.15, -2.76) rectangle (1.05, -2.27);
+            \filldraw[fill=white] (0.2,-2.51) circle (2mm);
+            \node[] at (-.13, 1.43) {\includegraphics[angle=90, origin=c, width=3.38em]{./images/nano.png}};
+
+            %% breadboard background
+            \begin{scope}[on background layer]
+                \node[] at (0, 0) {\includegraphics[width=10em]{./images/breadboard.png}};
+            \end{scope}
+
+        \end{tikzpicture}
+    \end{center}
+    \tiny
+    Breadboard source: \url{https://freesvg.org/breadboard}, Resistor source \url{https://freesvg.org/resistor-330-ohm}.
+\end{frame}
+
+\end{document}

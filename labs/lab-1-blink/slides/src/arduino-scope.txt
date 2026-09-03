@@ -1,0 +1,11 @@
+// accessible from anywhere
+int wheel_rotations = 0;
+
+void setup() {
+  // accessible from within the setup function only
+  int setup_rotations = 1;
+}
+
+void loop() {
+  int loop_rotations = 2;
+}

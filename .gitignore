@@ -1,0 +1,28 @@
+# Upstream source material (Dan Brennan's original repos) - not distributed
+.Dan/
+
+# GTA-only material - must never reach students
+gta-guide.tex
+gta-guide.pdf
+**/gta-guide/
+
+# LaTeX build artefacts
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+_minted*/
+*.pyg
+*.listing
+*.bbl 
+*.blg
+
+
+.vscode/
+TODO.md
