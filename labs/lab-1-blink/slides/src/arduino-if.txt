@@ -1,3 +1,0 @@
-if (condition) {
-    // do something if condition is true
-}

@@ -1,9 +1,0 @@
-// unsigned: a value that doesn't
-// have a + or - in the value. This 
-// allows the variable to store twice
-// the size e.g 0 to 65,535
-unsigned int whole_number = 10;
-// bool: a true or false
-bool correct = false;
-// array: a vector of char's (characters)
-char output[3] = { 'D', 'A', 'N'};

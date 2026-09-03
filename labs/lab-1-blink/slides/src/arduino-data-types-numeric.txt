@@ -1,9 +1,0 @@
-// integer: a whole number ranging from 
-// -32,768 to 32,767
-int whole_number = 10; 
-// long: a large whole number ranging from
-// -2,147,483,648 to 2,147,483,647
-long really_big_number = 3000000L
-// float: a decimal number ranging from 
-// -3.4028235E+38 to 3.4028235E+38
-float decimal_number = 5.6;

@@ -1,9 +1,0 @@
-// marks the integer as a contstant
-// and therefore is treated as a
-// read-only value
-const int SYSTEM_READY_LED_PIN = 5;
-
-// marks the integer as volatile and keeps the
-// value in RAM. This must be done for any
-// variable that can be changed by an interupt
-unsigned volatile int wheel_rotations_count;

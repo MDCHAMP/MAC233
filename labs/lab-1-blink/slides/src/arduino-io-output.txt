@@ -1,8 +1,0 @@
-void setup() {
-  // set pin 5 to output mode for an LED
-  pinMode(5, OUTPUT);
-  // turn 'off' the LED attached to pin 5
-  digitalWrite(5, LOW);
-  // turn 'on' the LED attached to pin 5
-  digitalWrite(5, HIGH);
-}

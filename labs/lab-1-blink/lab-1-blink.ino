@@ -24,13 +24,9 @@
 
 /*
   The morse code message to display,
-  in this example the word SAM: S (...) A (.-) M (--)
-
-  Note: the array length (7) and the wrap-around test in 'loop' are
-  deliberately hard-coded -- generalising them is the closing exercise
-  in the worksheet.
+  in this example the word MAX: M (--) A (.-) X (-..-)
 */
-char output[7] = { '.', '.', '.', '.', '-', '-', '-' };
+char output[8] = { '-', '-', '.', '-', '-', '.', '.', '-' };
 int current_char = 0;
 
 void setup() {
@@ -73,7 +69,7 @@ void loop() {
   digitalWrite(LED_BUILTIN, LOW);
 
   // determine the next sequence to display
-  if (current_char >= 6) {
+  if (current_char >= 7) {
     current_char = 0;
   } else {
     current_char++;

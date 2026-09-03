@@ -18,16 +18,16 @@
 %setup cover page variables
 \title{MAC 233: Arduino Introduction}
 \author{
-    Dr Dan Brennan
+    Dr Max Champneys
 }
-\institute[UoS-DRG]{
+\institute[UoS]{
     School of Mechanical, Aerospace, and Civil Engineering,\\
     University of Sheffield, UK
 }
-\date{MAC 233: \hspace{0.1em}\textbf{15/10/2025}}
+\date{MAC 233: \hspace{0.1em}\textbf{14/10/2026}}
 %setup footer variables
 \runninginstitute{MAC 233, School of MAC, University of Sheffield}
-\email{d.s.brennan@sheffield.ac.uk}
+\email{max.champneys@sheffield.ac.uk}
 
 %Begin Document
 \begin{document}
@@ -76,15 +76,61 @@
     \end{center}
 \end{frame}
 
-\begin{frame}{What is an Arduino?}
+\begin{frame}{What do we mean by `Arduino'?}
     \Large
-    Arduino is an open-source electronics platform based on easy-to-use hardware and software. Arduino boards are able to read inputs - light on a sensor, a finger on a button, or a Twitter message - and turn it into an output - activating a motor, turning on an LED, publishing something online. You can tell your board what to do by sending a set of instructions to the microcontroller on the board. To do so you use the Arduino programming language (based on Wiring), and the Arduino Software (IDE), based on Processing.
+    The word `Arduino' gets used for three different things:
+
+    \vspace{.75em}
+    \begin{itemize}
+        \item[\textbf{1.}] \textbf{The platform} --- An open-source project and company producing hardware designs, software and documentation.
+        \vspace{.5em}
+        \item[\textbf{2.}] \textbf{The board} --- The physical piece of electronics in front of you. We will use the `Arduino Nano Every' board in this course.
+        \vspace{.5em}
+        \item[\textbf{3.}] \textbf{The language} --- The C++ based language, and its libraries, used to write your programs (called sketches).
+    \end{itemize}
+\end{frame}
+
+% \begin{frame}{Outline}
+%     \Large
+%     \tableofcontents
+% \end{frame}
+
+\section{Arduino: The platform}
+
+\begin{frame}[standout]
+    \LARGE Arduino\\
+    \normalsize The platform
+\end{frame}
+
+\begin{frame}{Arduino: The platform}
+    \Large
+    Arduino designs, manufactures, and supports electronic devices and
+    software, allowing people around the world to easily access advanced
+    technologies that interact with the physical world. Our products are
+    straightforward, simple, and powerful, ready to satisfy users' needs from
+    students to makers and all the way to professional developers.
 
     \begin{flushright}
         \vspace{.5em}
         \scriptsize
-        \text{Source: https://www.arduino.cc/en/Guide/Introduction}
+        \text{Adapted from: https://www.arduino.cc/en/about/}
     \end{flushright}
+\end{frame}
+
+\begin{frame}{An ecosystem of hardware and software}
+    \begin{center}
+        % \vspace{-.5em}
+        \includegraphics[width=\textwidth]{./images/arduino_ecosystem.png}
+
+        \url{https://www.arduino.cc/}
+    \end{center}
+\end{frame}
+
+\section{Arduino: The board}
+
+\begin{frame}[standout]
+    \LARGE Arduino\\
+    \normalsize The board
 \end{frame}
 
 \begin{frame}{Arduino Nano Every}
@@ -107,6 +153,57 @@
     \end{center}
 \end{frame}
 
+\begin{frame}{Anatomy of the board}
+    \begin{center}
+        \begin{tikzpicture}[
+            callout/.style={draw=purple, line width=.3mm, -latex},
+            label/.style={align=center, color=purple, font=\small},
+        ]
+            \node[anchor=south west, inner sep=0] (board) at (0, 0)
+                {\includegraphics[width=.66\textwidth]{./images/nano.png}};
+
+            % coordinates below are fractions of the image: (0,0) bottom left, (1,1) top right
+            \begin{scope}[x={(board.south east)}, y={(board.north west)}]
+
+                % header pins
+                \node[label] (l-pins) at (0.30, 1.30) {Header pins\\(two rows)};
+                \draw[callout] (l-pins) -- (0.30, 0.99);
+
+                % built in LED
+                \node[label] (l-led) at (0.80, 1.30) {Built-in LED\\(\texttt{LED\_BUILTIN})};
+                \draw[callout] (l-led) -- (0.895, 0.85);
+
+                % microcontroller
+                \node[label] (l-mcu) at (0.17, -0.30) {Microcontroller\\(ATmega4809)};
+                \draw[callout] (l-mcu) -- (0.255, 0.47);
+
+                % reset button
+                \node[label] (l-reset) at (0.50, -0.30) {Reset button};
+                \draw[callout] (l-reset) -- (0.706, 0.46);
+
+                % usb
+                \node[label] (l-usb) at (0.86, -0.30) {USB connector\\(power \& programming)};
+                \draw[callout] (l-usb) -- (0.925, 0.44);
+
+                % power light
+                \node[label, anchor=west] (l-power) at (1.04, 0.10) {Power light\\(on when powered)};
+                \draw[callout] (l-power.west) -- (0.915, 0.19);
+
+            \end{scope}
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Pins}
+    \Large
+    Inputs and outputs from the Arduino's microcontroller are handled by the `pin's on the board.\\
+
+    Each pin is numbered and can be configured as an input or an output.\\ 
+    
+    Because each pin connects to a different part of the microcontroller, different pins support different features. 
+
+\end{frame}
+
 \begin{frame}{Pinout Diagram}
     \begin{columns}
         \begin{column}{.5\textwidth}
@@ -127,22 +224,28 @@
     \end{center}
 \end{frame}
 
-%Section: Variables
+
+
+\section{Arduino: The language}
+
 \begin{frame}[standout]
-    \LARGE MATLAB vs Arduino
+    \LARGE Arduino\\
+    \normalsize The language
 \end{frame}
 
-\begin{frame}{Arduino IDE}
-    \begin{center}
-        \includegraphics[width=.75\textwidth]{./images/arduino-ide.png}
-        \url{https://www.arduino.cc/en/software}
-    \end{center}
+\begin{frame}{The Arduino language}
+    \Large
+    Arduino uses a C++ based programming language. \\
+
+    Arduino programs are called `sketches'. \\
+
+    The Arduino language has some similarities and some important differences from the MATLAB you have seen before.
 \end{frame}
 
-\begin{frame}{Variables}
+\begin{frame}{Arduino Vs. MATLAB}
     \Large
     \textbf{MATLAB} is a dynamically typed language.\\
-    This means you can simply declare a variable as below and MATLAB figures it out for you:\\
+    This means you can simply declare a variable and MATLAB will figure out what kind of memory is needed automatically:\\
     \vspace{-1.5em}
     \inputminted{matlab}{./src/matlab-variable.txt}
 
@@ -154,136 +257,185 @@
 
 \end{frame}
 
-\begin{frame}{Variables: Data Types}
-    \Large
-    \inputminted{arduino}{./src/arduino-data-types-numeric.txt}
+\begin{frame}{The data types you will need}
+    \normalsize
+    \inputminted{arduino}{./src/arduino-data-types.txt}
 \end{frame}
 
-\begin{frame}{Variables: Data Types} 
-    \Large
-    \inputminted{arduino}{./src/arduino-data-types-other.txt}
-\end{frame}
-
-\begin{frame}{Variables: Qualifiers}
-    \Large
-    \inputminted{arduino}{./src/arduino-qualifiers.txt}
-\end{frame}
-
-\begin{frame}{Special Functions}
-    \Large
-    A function is a grouping of logic into a named piece of code that you can then call from somewhere else in your code.\\
-
-    Arduino has two special functions that must exists in a Sketch before it can be compiled and uploaded to your Arduino: `setup' and `loop'.\\
-\end{frame}
-
-\begin{frame}{Minimum Sketch}
-    \Large
-    \inputminted{arduino}{./src/arduino-minimum.txt}
-\end{frame}
-
-\begin{frame}{Variables: Scope}
-    \Large
-    The scope of a variable, is which areas of the program it is valid within e.g where can it be accessed.\\
-
-    A variable can either be within the scope of a function, or it can be within the scope of the whole program.\\
-\end{frame}
-
-\begin{frame}{Variables: Scope}
-    \Large
-    \inputminted{arduino}{./src/arduino-scope.txt}
-\end{frame}
-
-%Section: Conditionals
-\begin{frame}[standout]
-    \LARGE Control Structure
-\end{frame}
-
-\begin{frame}{Control Structure: If}
-    \Large
-    You will often want to control what happens in your code depending on certain conditions.\\
-
-    The most useful control structure for our use case is an `if'. If the condition is `true', then the code within the curly brackets gets executed.\\
-    \inputminted{arduino}{./src/arduino-if.txt}
-\end{frame}
-
-\begin{frame}{Control Structure: If-Else}
-    \Large
-    The `if' control structure can be extended with an `else'.\\
-
-    The code within the curly brackets after the `else' gets executed if the condition is `false'.\\
-    \inputminted{arduino}{./src/arduino-if-else.txt}
-\end{frame}
-
-\begin{frame}{Control Structure: If-Else-If}
-    \Large
-    This can be further extended to chain multiple conditions together.\\
-    \inputminted{arduino}{./src/arduino-if-else-if.txt}
-\end{frame}
-
-\begin{frame}{Condition}
-    \Large
-    A condition is the comparison of the `left' value to the `right value'. A condition will be true if the comparison is correct.\\
-    
-    `$X == Y$' The X and Y value are the same\\
-    `$X != Y$' The X and Y value are not the same\\
-    `$X < Y$' X is less than Y\\
-    `$X <= Y$' X is less than or equal to Y\\
-
-    Conditions can be chained together by either an and ($\&\&$) or an or ($\|$).\\
-
-\end{frame}
-
-\begin{frame}{Condition}
-    \Large
+\begin{frame}{Control flow: `if', `else if', `else'}
+    \normalsize
+    Code inside the curly brackets runs only when the condition is true. Compare values with $==$, $!=$, $<$, $<=$, $>$ or $>=$, and chain conditions with `and'  ($\&\&$) or `or' ($\|$).\\
+    \vspace{-.5em}
     \inputminted{arduino}{./src/arduino-condition.txt}
 \end{frame}
 
-%Section: IO
-\begin{frame}[standout]
-    \LARGE IO \& Interrupts\\
-    \normalsize Inputs \& Outputs
-\end{frame}
 
-\begin{frame}{Pin Mode}
-    \Large
-    Inputs and Outputs from the Arduino are handled by the `Pin's on the board.\\
-
-    Each Pin in numbered and can be configured as an input or an output. This decision must be made within the `setup' function of your Sketch.\\
-
-\end{frame}
-
-\begin{frame}{Pin: Mode}
-    \Large
-    The `pinMode' function sets the mode for a Pin. The first parameter is the pin number, and the second parameter is either `INPUT' or `OUTPUT'.\\
-
+\begin{frame}{Pins: setting the mode}
+    \normalsize
+    Before a pin can be used, the Arduino has to be told which direction it works in. `pinMode' sets a pin to `INPUT' or `OUTPUT', and belongs in `setup' --- it only needs doing once.
+    \vspace{-.5em}
     \inputminted{arduino}{./src/arduino-io-mode.txt}
 \end{frame}
 
-\begin{frame}{Pin: Setting the output value}
-    \Large
-    An output pin can either have the value set to LOW or HIGH.\\
-
-    \inputminted{arduino}{./src/arduino-io-output.txt}
+\begin{frame}{Pins: reading and writing values}
+    \normalsize
+    `digitalWrite' sets an output pin `HIGH' (on) or `LOW' (off). `digitalRead' gives back the `HIGH' or `LOW' state of an input pin. These usually belong in `loop', where they happen over and over.
+    \vspace{-.5em}
+    \inputminted{arduino}{./src/arduino-io-readwrite.txt}
 \end{frame}
 
-\begin{frame}{Pin: Reading the input value}
-    \Large
-    An input could change at any point. As such, we can't rely upon the value to change when we are at a certain point in the `loop' function.\\
-    
-    Instead, we have to `interrupt' the main `loop' function to record the value.\\
 
-    The `interrupt' function can be called when the input value is `LOW', `CHANGE', `RISING', or `FALLING'.\\
+
+\section{Arduino: Sketches}
+
+\begin{frame}[standout]
+    \LARGE Sketches\\
+    \normalsize Arduino programs
 \end{frame}
 
-\begin{frame}{Pin: Reading the input value}
+
+\begin{frame}{Sketch basics}
     \large
-    \inputminted{arduino}{./src/arduino-io-input.txt}
+    Arduino has two special functions that must exist in a sketch before it can be compiled and uploaded to your board: `setup' and `loop'.\\
+
+    \vspace{.25em}
+    `File' \textrightarrow `Examples' \textrightarrow `01.Basics' \textrightarrow `BareMinimum':\\
+    \vspace{-.5em}
+    {\normalsize\inputminted{arduino}{./src/arduino-minimum.txt}}
 \end{frame}
+
+% the bare structure is boxed up first so it can be annotated inside a tikzpicture
+\newsavebox{\structurebox}
+\savebox{\structurebox}{%
+    \begin{minipage}{.34\textwidth}
+        \small
+        \inputminted{arduino}{./src/arduino-structure.txt}
+    \end{minipage}%
+}
+
+\begin{frame}{Sketch basics}
+    \begin{center}
+        \begin{tikzpicture}[
+            callout/.style={draw=purple, line width=.3mm, -latex},
+            label/.style={align=left, color=purple, font=\small},
+        ]
+            \node[anchor=south west, inner sep=0] (code) at (0, 0) {\usebox{\structurebox}};
+
+            % coordinates are fractions of the listing: 7 lines, so each is 1/7 tall
+            \begin{scope}[x={(code.south east)}, y={(code.north west)}]
+
+                \node[label, anchor=west] (l-setup) at (1.10, 0.86)
+                    {runs \textbf{once}, the moment the board\\is powered on or reset};
+                \draw[callout] (l-setup.west) -- (1.02, 0.929);
+
+                \node[label, anchor=west] (l-loop) at (1.10, 0.28)
+                    {runs \textbf{forever} afterwards --- as soon\\as it finishes, it starts again};
+                \draw[callout] (l-loop.west) -- (1.02, 0.357);
+
+            \end{scope}
+        \end{tikzpicture}
+
+        \vspace{1.5em}
+
+        % the order things happen in
+        \begin{tikzpicture}[
+            flow/.style={draw=black, line width=.3mm, -latex},
+            stage/.style={draw=black!50, rounded corners=2pt, inner sep=6pt, font=\small, align=center},
+        ]
+            \node[stage] (power) at (0, 0)   {Power on\\or reset};
+            \node[stage] (setup) at (3.5, 0) {\texttt{setup()}};
+            \node[stage] (loop)  at (7, 0)   {\texttt{loop()}};
+
+            \draw[flow] (power) -- (setup);
+            \draw[flow] (setup) -- (loop);
+            \draw[flow] (loop.north east) to[out=60, in=120]
+                node[midway, above, font=\scriptsize, color=purple] {and again, and again...}
+                (loop.north west);
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}{What goes in each function?}
+    \normalsize
+    \begin{columns}[t]
+        \begin{column}{.47\textwidth}
+            \textbf{setup() \textrightarrow{} `get ready'}\\
+            Anything that only needs doing once, before the board starts doing its job:
+            \vspace{.5em}
+            \begin{itemize}
+                \item choose whether a pin is an input or an output (`pinMode')
+                \vspace{.25em}
+                \item open a serial connection to the computer (`Serial.begin')
+                \vspace{.25em}
+                \item attach a servo, or start up a sensor library
+                \vspace{.25em}
+                \item give global variables their starting values
+            \end{itemize}
+        \end{column}
+        \begin{column}{.47\textwidth}
+            \textbf{loop() \textrightarrow{} `do the work'}\\
+            Anything that has to happen over and over for as long as the board is powered:
+            \vspace{.5em}
+            \begin{itemize}
+                \item read the inputs (`digitalRead', `analogRead')
+                \vspace{.25em}
+                \item decide what to do with `if' / `else if' / `else'
+                \vspace{.25em}
+                \item drive the outputs (`digitalWrite', `analogWrite')
+                \vspace{.25em}
+                \item wait before the next pass (`delay')
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% code listing is boxed up first so it can be annotated inside a tikzpicture
+\newsavebox{\scopebox}
+\savebox{\scopebox}{%
+    \begin{minipage}{.46\textwidth}
+        \small
+        \inputminted{arduino}{./src/arduino-anatomy.txt}
+    \end{minipage}%
+}
+
+\begin{frame}{Variables: scope}
+    \normalsize
+    The \textbf{scope} of a variable is the part of the sketch in which it can be accessed: declared outside any function it belongs to the whole program, declared inside a function it belongs to that function alone.\\
+    % \vspace{-.25em}
+    \begin{center}
+        \begin{tikzpicture}[
+            callout/.style={draw=purple, line width=.3mm, -latex},
+            label/.style={align=left, color=purple, font=\small},
+        ]
+            \node[anchor=south west, inner sep=0] (code) at (0, 0) {\usebox{\scopebox}};
+
+            % coordinates are fractions of the listing: 12 lines, so each is 1/12 tall
+            \begin{scope}[x={(code.south east)}, y={(code.north west)}]
+
+                \node[label, anchor=west] (l-global) at (1.10, 0.87)
+                    {Global scope --- visible\\anywhere in the sketch};
+                \draw[callout] (l-global.west) -- (1.02, 0.875);
+
+                \node[label, anchor=west] (l-local) at (1.10, 0.52)
+                    {Local scope --- visible only\\inside this function};
+                \draw[callout] (l-local.west) -- (1.02, 0.542);
+
+                \node[label, anchor=west] (l-error) at (1.10, 0.15)
+                    {\texttt{setup\_rotations} does not exist\\out here --- the sketch will not compile};
+                \draw[callout] (l-error.west) -- (1.02, 0.125);
+
+            \end{scope}
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+
+
 
 \begin{frame}{Additional Information}
     \Large
     \begin{center}
-        I have only covered the most useful variables and structure for our use case; however, there are many more options available:\\
+        We have only covered the most useful variables and structure for our use case; however, there are many more options available:\\
         \vspace{1em}
         \qrcode[hyperlink, height=4cm]{https://docs.arduino.cc/language-reference}\\
         \vspace{1em}
@@ -291,7 +443,11 @@
     \end{center}
 \end{frame}
 
-%Section: Lab
+
+%%%%%%%%%%%%%%%%%%%%%%%%% Lab 1
+
+\section{Lab 1}
+
 \begin{frame}[standout]
     \LARGE Lab 1\\
     \normalsize Communicating with the internal LED
@@ -311,35 +467,30 @@
     \end{center}
 \end{frame}
 
-\begin{frame}{Step 2: Download Lab 1 from Blackboard}
+\begin{frame}{Step 2: Get the Lab 1 worksheet}
+    \large
     \begin{center}
-        Login to Blackboard: \url{https://vle.shef.ac.uk/}
-        \begin{tikzpicture}[
-            highlight/.style={draw=purple, line width=.25mm},
-        ]
-            % screenshot
-            \node[] at (0, 0) {\includegraphics[width=.7\textwidth]{./images/lab-worksheet.png}};
-            % highlight
-            \draw[highlight] (-4.25, -.375) rectangle ++(2, 0.4);
-        \end{tikzpicture}
+        Everything you need for the labs lives in the course GitHub repository. Scan the code, or follow the link, to open the Lab 1 worksheet:\\
+        \vspace{.75em}
+        \qrcode[hyperlink, height=3.25cm]{https://github.com/MDCHAMP/MAC233/blob/main/labs/lab-1-blink/docs/lab-1-blink.pdf}\\
+        \vspace{.75em}
+        \footnotesize
+        \url{https://github.com/MDCHAMP/MAC233/blob/main/labs/lab-1-blink/docs/lab-1-blink.pdf}
     \end{center}
 \end{frame}
 
-\begin{frame}{Step 2: Download Lab 1 from Blackboard}
+\begin{frame}{Step 3: Connect your Arduino}
+    \Large
+    Plug your Arduino into your computer using a USB cable.
+
+    \vspace{.5em}
+    A light on the board should come on to show that it has power. If nothing lights up, try a different USB lead --- some leads only carry power for charging and cannot carry data.
     \begin{center}
-        Login to Blackboard: \url{https://vle.shef.ac.uk/}
-        \begin{tikzpicture}[
-            highlight/.style={draw=purple, line width=.25mm},
-        ]
-            % screenshot
-            \node[] at (0, 0) {\includegraphics[width=.7\textwidth]{./images/lab-download.png}};
-            % highlight
-            \draw[highlight] (3.1, -1.8) rectangle ++(1.6, 0.5);
-        \end{tikzpicture}
+        \includegraphics[width=.35\textwidth]{./images/nano.png}
     \end{center}
 \end{frame}
 
-\begin{frame}{Step 3: Select the correct board and port}
+\begin{frame}{Step 4: Select the board and port}
     \begin{center}
         \begin{tikzpicture}[
             highlight/.style={draw=purple, line width=.25mm},
@@ -354,11 +505,56 @@
     \end{center}
 \end{frame}
 
+\begin{frame}{Step 5: Write, compile and upload your sketch}
+    \Large
+    \textbf{Compile:} `Sketch' \textrightarrow `Verify\textbackslash Compile'.\\
+    This checks your code for errors without sending anything to the board.
+
+    \vspace{1em}
+    \textbf{Upload:} `Sketch' \textrightarrow `Upload'.\\
+    This compiles the sketch and then sends it to the board.
+
+    \vspace{1em}
+    \normalsize
+    A red warning about being unable to locate `flash' is normal on the Nano Every and can be ignored.
+\end{frame}
+
+\begin{frame}{Step 6: Open the Serial Monitor}
+    \Large
+    The Serial Monitor shows you the messages your Arduino sends back: `Tools' \textrightarrow `Serial Monitor'.
+
+    \vspace{1em}
+    It opens in the bottom section of the IDE, next to the `Output' tab.
+
+    \vspace{1em}
+    Set the baud rate drop-down to \textbf{9600}. This must match the value you passed to `Serial.begin' in your sketch, not, you will see random characters instead of words!
+\end{frame}
+
 \begin{frame}{Help}
-    \begin{center}
-        Raise your hand and someone will come and help you.
-        \includegraphics[width=.8\textwidth]{./images/lab-help.png}
-    \end{center}
+    \Large
+    
+    \normalsize
+    \begin{columns}
+        \begin{column}{.5\textwidth}
+            \begin{center}
+                \textbf{Lab 1 worksheet}\\
+                \vspace{.5em}
+                \qrcode[hyperlink, height=3cm]{https://github.com/MDCHAMP/MAC233/blob/main/labs/lab-1-blink/docs/lab-1-blink.pdf}
+            \end{center}
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \begin{center}
+                \textbf{Nano Every pinout}\\
+                \vspace{.5em}
+                \qrcode[hyperlink, height=3cm]{https://docs.arduino.cc/resources/pinouts/ABX00028-full-pinout.pdf}
+            \end{center}
+        \end{column}
+    \end{columns}
+    
+    
+    \vspace{3.5em}
+    Problems? Raise your hand and someone will come and help you.
+        
 \end{frame}
 
 \end{document}
