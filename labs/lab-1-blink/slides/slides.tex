@@ -76,6 +76,15 @@
     \end{center}
 \end{frame}
 
+\begin{frame}{Today}
+    \Large
+    \begin{itemize}
+        \item Intro to Arduino (25 mins)
+        \item Intro to Lab 1 (5 mins)
+        \item Lab 1 (90mins)
+    \end{itemize}
+\end{frame}
+
 \begin{frame}{What do we mean by `Arduino'?}
     \Large
     The word `Arduino' gets used for three different things:
@@ -90,10 +99,7 @@
     \end{itemize}
 \end{frame}
 
-% \begin{frame}{Outline}
-%     \Large
-%     \tableofcontents
-% \end{frame}
+
 
 \section{Arduino: The platform}
 
@@ -273,14 +279,14 @@
 \begin{frame}{Pins: setting the mode}
     \normalsize
     Before a pin can be used, the Arduino has to be told which direction it works in. `pinMode' sets a pin to `INPUT' or `OUTPUT', and belongs in `setup' --- it only needs doing once.
-    \vspace{-.5em}
+    \vspace{.5em}
     \inputminted{arduino}{./src/arduino-io-mode.txt}
 \end{frame}
 
 \begin{frame}{Pins: reading and writing values}
     \normalsize
     `digitalWrite' sets an output pin `HIGH' (on) or `LOW' (off). `digitalRead' gives back the `HIGH' or `LOW' state of an input pin. These usually belong in `loop', where they happen over and over.
-    \vspace{-.5em}
+    \vspace{.5em}
     \inputminted{arduino}{./src/arduino-io-readwrite.txt}
 \end{frame}
 
@@ -313,7 +319,7 @@
     \end{minipage}%
 }
 
-\begin{frame}{Sketch basics}
+\begin{frame}{Sketch basics: what runs when}
     \begin{center}
         \begin{tikzpicture}[
             callout/.style={draw=purple, line width=.3mm, -latex},
@@ -527,7 +533,7 @@
     It opens in the bottom section of the IDE, next to the `Output' tab.
 
     \vspace{1em}
-    Set the baud rate drop-down to \textbf{9600}. This must match the value you passed to `Serial.begin' in your sketch, not, you will see random characters instead of words!
+    Set the baud rate drop-down to \textbf{9600}. This must match the value you passed to `Serial.begin' in your sketch, or you will see random characters instead of words!
 \end{frame}
 
 \begin{frame}{Help}
