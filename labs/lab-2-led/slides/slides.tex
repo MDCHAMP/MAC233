@@ -15,6 +15,12 @@
 \usetikzlibrary{backgrounds}
 \usetikzlibrary{decorations.pathreplacing}
 
+% the drgtheme files live once at the repo root, in ../../../theme/
+\makeatletter
+\def\input@path{{../../../theme/}}
+\makeatother
+\graphicspath{{./images/}{../../../theme/}}
+
 \usetheme{drgtheme}
 
 %setup cover page variables
