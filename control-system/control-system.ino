@@ -11,21 +11,21 @@
 //////////////////////////////////////////////////////////////
 #include <Servo.h>                                          //
 // pins: do not change these values                         //
-#define SYSTEM_READY_LED_PIN 4                              // 
-#define CRANK_ACTIVITY_LED_PIN 5                            //  
+#define SYSTEM_READY_LED_PIN 4                              //
+#define CRANK_ACTIVITY_LED_PIN 5                            //
 #define MOTOR_ACTIVITY_LED_PIN 6                            //
 #define MOTOR_LOAD_PIN 10                                   //
 #define CRANK_PIN 2                                         //
 #define WHEEL_PIN 3                                         //
 #define ESC_PIN 9                                           //
-// safety: do not change these values                       // 
-#define CRANK_PASS_ACTIVITY_DELAY 500                       //  
+// safety: do not change these values                       //
+#define CRANK_PASS_ACTIVITY_DELAY 500                       //
 #define CRANK_PASS_MAXIMUM_DELAY 3000                       //
 #define WHEEL_PASS_MINIMUM_DELAY 200                        //
 #define WHEEL_PASS_MAXIMUM_DELAY 3000                       //
 #define WHEEL_MAXIMUM_SPEED 25.0                            //
 // bike                                                     //
-#define WHEEL_CIRCUMFORANCE 2.0734                          //
+#define WHEEL_CIRCUMFERENCE 2.0734                          //
 const float pedal_threshold_rpm = 20;                       //
 // debug                                                    //
 #define MESSAGE_MAXIMUM_INTERVAL 1000                       //
@@ -70,7 +70,7 @@ void setup() {
   // motor output
   esc.attach(ESC_PIN, esc_neutral, esc_full_power);
   motor_demand(0);
-  // pause system untill ready
+  // pause system until ready
   delay(startup_time);
   // only start listening to the sensors now the system is ready, so that
   // anything that happens during start up is never recorded
@@ -111,10 +111,10 @@ void loop() {
   if (wheel_interrupt_previous_time > 0 && wheel_rotation_time > 1
       && current_loop_time - wheel_interrupt_current_time < WHEEL_PASS_MAXIMUM_DELAY) {
     float wheel_rpm = 60.0 / (wheel_rotation_time / 1000);
-    wheel_kmph = (wheel_rpm * 60 * WHEEL_CIRCUMFORANCE) / 1000;
+    wheel_kmph = (wheel_rpm * 60 * WHEEL_CIRCUMFERENCE) / 1000;
   }
 
-  // your control systyem code goes here!
+  // your control system code goes here!
   //////////////////////////////////////////////////////////////
   // A simple example of a control system.
   // only assist the rider while they are pedalling, 
