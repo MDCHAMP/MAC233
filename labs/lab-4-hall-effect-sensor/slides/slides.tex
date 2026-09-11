@@ -19,7 +19,7 @@
 \makeatletter
 \def\input@path{{../../../theme/}}
 \makeatother
-\graphicspath{{./images/}{../../../theme/}}
+\graphicspath{{../images/}{../../../theme/}}
 
 \usetheme{drgtheme}
 
@@ -146,7 +146,7 @@ volatile unsigned int wheel_rotations_count = 0;
             highlight/.style={draw=purple, line width=.25mm},
         ]
             % screenshot
-            \node[] at (0, 0) {\includegraphics[width=.7\textwidth]{./images/lab-4.png}};
+            \node[] at (0, 0) {\includegraphics[width=.7\textwidth]{../images/lab-4.png}};
             % highlight
             \draw[highlight] (-4.15, -1.65) rectangle ++(2, 0.4);
         \end{tikzpicture}
@@ -181,15 +181,15 @@ volatile unsigned int wheel_rotations_count = 0;
             \draw[wire, jumper] (-.31,-1.61) -- (.422,-1.61) -- (.422,-0.307) to[out=50, in=130] (.792,-0.307) -- (.792, 0.792);
 
             %% components
-            \node[] at (-.865, -1.23) {\includegraphics[angle=90, origin=c,width=1.75mm]{./images/resistor-10k.png}}; %10k resistor
+            \node[] at (-.865, -1.23) {\includegraphics[angle=90, origin=c,width=1.75mm]{../images/resistor-10k.png}}; %10k resistor
             \fill[fill=red] (-.44,-1.44) -- (-.44, -1.04) -- (-.54, -1.04) -- (-.59, -1.14) -- (-.59, -1.34) -- (-.54, -1.44) -- cycle; %hall effect
             \filldraw[fill=red, draw=black] (.79,-1.05) circle (1.25mm); %led
-            \node[] at (.975, 0.323) {\includegraphics[angle=90, origin=c,width=1.75mm]{./images/resistor-220.png}}; %220 resistor
-            \node[] at (-.13, 1.43) {\includegraphics[angle=90, origin=c, width=3.38em]{./images/nano.png}}; %nano
+            \node[] at (.975, 0.323) {\includegraphics[angle=90, origin=c,width=1.75mm]{../images/resistor-220.png}}; %220 resistor
+            \node[] at (-.13, 1.43) {\includegraphics[angle=90, origin=c, width=3.38em]{../images/nano.png}}; %nano
 
             %% breadboard background
             \begin{scope}[on background layer]
-                \node[] at (0, 0) {\includegraphics[width=10em]{./images/breadboard.png}};
+                \node[] at (0, 0) {\includegraphics[width=10em]{../images/breadboard.png}};
             \end{scope}
 
         \end{tikzpicture}

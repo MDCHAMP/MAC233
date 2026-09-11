@@ -19,7 +19,7 @@
 \makeatletter
 \def\input@path{{../../../theme/}}
 \makeatother
-\graphicspath{{./images/}{../../../theme/}}
+\graphicspath{{../images/}{../../../theme/}}
 
 \usetheme{drgtheme}
 
@@ -188,12 +188,12 @@ void loop() {
 
             %% components
             \filldraw[fill=red, draw=black] (.79,-1.05) circle (1.25mm);
-            \node[] at (.975, 0.14) {\includegraphics[angle=90, origin=c,width=1.75mm]{./images/resistor-220.png}};
-            \node[] at (-.13, 1.43) {\includegraphics[angle=90, origin=c, width=3.38em]{./images/nano.png}};
+            \node[] at (.975, 0.14) {\includegraphics[angle=90, origin=c,width=1.75mm]{../images/resistor-220.png}};
+            \node[] at (-.13, 1.43) {\includegraphics[angle=90, origin=c, width=3.38em]{../images/nano.png}};
 
             %% breadboard background
             \begin{scope}[on background layer]
-                \node[] at (0, 0) {\includegraphics[width=10em]{./images/breadboard.png}};
+                \node[] at (0, 0) {\includegraphics[width=10em]{../images/breadboard.png}};
             \end{scope}
 
         \end{tikzpicture}

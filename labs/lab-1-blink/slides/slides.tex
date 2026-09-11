@@ -17,7 +17,7 @@
 \makeatletter
 \def\input@path{{../../../theme/}}
 \makeatother
-\graphicspath{{./images/}{../../../theme/}}
+\graphicspath{{../images/}{../../../theme/}}
 
 \usetheme{drgtheme}
 
@@ -132,7 +132,7 @@
 \begin{frame}{An ecosystem of hardware and software}
     \begin{center}
         % \vspace{-.5em}
-        \includegraphics[width=\textwidth]{./images/arduino_ecosystem.png}
+        \includegraphics[width=\textwidth]{../images/arduino_ecosystem.png}
 
         \url{https://www.arduino.cc/}
     \end{center}
@@ -149,7 +149,7 @@
     \begin{columns}
         \begin{column}{.5\textwidth}
             \begin{center}
-                \includegraphics[width=\textwidth]{./images/nano.png}
+                \includegraphics[width=\textwidth]{../images/nano.png}
             \end{center}
         \end{column}
         \begin{column}{.5\textwidth}
@@ -172,7 +172,7 @@
             label/.style={align=center, color=purple, font=\small},
         ]
             \node[anchor=south west, inner sep=0] (board) at (0, 0)
-                {\includegraphics[width=.66\textwidth]{./images/nano.png}};
+                {\includegraphics[width=.66\textwidth]{../images/nano.png}};
 
             % coordinates below are fractions of the image: (0,0) bottom left, (1,1) top right
             \begin{scope}[x={(board.south east)}, y={(board.north west)}]
@@ -220,7 +220,7 @@
     \begin{columns}
         \begin{column}{.5\textwidth}
             \begin{center}
-                \includegraphics[width=\textwidth, trim={13cm 11cm 13cm 7cm}, clip]{./images/nano-every-full-pinout.pdf}            
+                \includegraphics[width=\textwidth, trim={13cm 11cm 13cm 7cm}, clip]{../images/nano-every-full-pinout.pdf}            
             \end{center}
         \end{column}
         \begin{column}{.5\textwidth}
@@ -541,7 +541,7 @@ void loop() {
             highlight/.style={draw=purple, line width=.25mm},
         ]
             % screenshot
-            \node[] at (0, 0) {\includegraphics[width=.7\textwidth]{./images/arduino-download.png}};
+            \node[] at (0, 0) {\includegraphics[width=.7\textwidth]{../images/arduino-download.png}};
             % highlight
             \draw[highlight] (0, -.5) rectangle ++(3.85, 0.5);
         \end{tikzpicture}
@@ -567,7 +567,7 @@ void loop() {
     \vspace{.5em}
     A light on the board should come on to show that it has power. If nothing lights up, try a different USB lead --- some leads only carry power for charging and cannot carry data.
     \begin{center}
-        \includegraphics[width=.35\textwidth]{./images/nano.png}
+        \includegraphics[width=.35\textwidth]{../images/nano.png}
     \end{center}
 \end{frame}
 
@@ -577,7 +577,7 @@ void loop() {
             highlight/.style={draw=purple, line width=.25mm},
         ]
             % screenshot
-            \node[] at (0, 0) {\includegraphics[width=.8\textwidth]{./images/arduino-board-selection.png}};
+            \node[] at (0, 0) {\includegraphics[width=.8\textwidth]{../images/arduino-board-selection.png}};
             % highlight
             \draw[highlight] (-4.5, 2.3) rectangle ++(2.1, 0.5);
             \draw[highlight] (-2.75, -.1) rectangle ++(2.5, 0.5);

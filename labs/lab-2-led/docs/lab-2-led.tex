@@ -67,7 +67,7 @@ A breadboard can be thought of as a collection of rows (1\textrightarrow $N$) an
     \begin{center}
         \begin{subfigure}[t]{.45\textwidth}
             \centering
-            \includegraphics[width=\textwidth]{./images/breadboard.png}
+            \includegraphics[width=\textwidth]{../images/breadboard.png}
             \caption{The board as you see it.}
             \label{fig:breadboard-plain}
         \end{subfigure}
@@ -77,7 +77,7 @@ A breadboard can be thought of as a collection of rows (1\textrightarrow $N$) an
             \begin{tikzpicture}
                 %%breadboard
                 \node[anchor=south west, inner sep=0] (bb) at (0, 0)
-                    {\includegraphics[width=\textwidth]{./images/breadboard.png}};
+                    {\includegraphics[width=\textwidth]{../images/breadboard.png}};
                 \begin{scope}[x={(bb.south east)}, y={(bb.north west)}]
                     %% every numbered row
                     \foreach \r in {1,...,30}{ \rowwire{\r} }
@@ -155,7 +155,7 @@ If you are having issue compiling the project or don't understand where each sec
 Additionally, if you are wondering how to wire up the circuit required for this lab on the breadboard, the electronic wiring diagram is below.
 
 \begin{center}
-    \includegraphics[width=.4\textwidth]{./images/wiring-diagram.png}
+    \includegraphics[width=.4\textwidth]{../images/wiring-diagram.png}
 \end{center}
 
 \end{document}

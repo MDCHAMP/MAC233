@@ -19,7 +19,7 @@
 \makeatletter
 \def\input@path{{../../../theme/}}
 \makeatother
-\graphicspath{{./images/}{../../../theme/}}
+\graphicspath{{../images/}{../../../theme/}}
 
 \usetheme{drgtheme}
 
@@ -105,7 +105,7 @@
             highlight/.style={draw=purple, line width=.25mm},
         ]
             % screenshot
-            \node[] at (0, 0) {\includegraphics[width=.7\textwidth]{./images/lab-3.png}};
+            \node[] at (0, 0) {\includegraphics[width=.7\textwidth]{../images/lab-3.png}};
             % highlight
             \draw[highlight] (-4.15, -1.2) rectangle ++(2, 0.4);
         \end{tikzpicture}
@@ -136,11 +136,11 @@
             \filldraw[fill=black] (0.6, -1.8) rectangle (0.98, -1.6);
             \filldraw[fill=blue, draw=black] (-.15, -2.76) rectangle (1.05, -2.27);
             \filldraw[fill=white] (0.2,-2.51) circle (2mm);
-            \node[] at (-.13, 1.43) {\includegraphics[angle=90, origin=c, width=3.38em]{./images/nano.png}};
+            \node[] at (-.13, 1.43) {\includegraphics[angle=90, origin=c, width=3.38em]{../images/nano.png}};
 
             %% breadboard background
             \begin{scope}[on background layer]
-                \node[] at (0, 0) {\includegraphics[width=10em]{./images/breadboard.png}};
+                \node[] at (0, 0) {\includegraphics[width=10em]{../images/breadboard.png}};
             \end{scope}
 
         \end{tikzpicture}
