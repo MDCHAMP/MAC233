@@ -105,16 +105,38 @@
     The `interrupt' function can be called when the input value is `LOW', `CHANGE', `RISING', or `FALLING'.\\
 \end{frame}
 
-\begin{frame}{Reading an input: `attachInterrupt'}
+% [fragile] is required for the inline minted listing
+\begin{frame}[fragile]{Reading an input: `attachInterrupt'}
     \large
-    \inputminted{arduino}{./src/arduino-io-input.txt}
+\begin{minted}{arduino}
+void setup() {
+  // set pin 3 to an input
+  pinMode(3, INPUT);
+  // when the input value of pin 3 falls
+  // call the function 'wheelInterrupt'
+  attachInterrupt(
+    digitalPinToInterrupt(3), wheelInterrupt, FALLING
+  );
+}
+
+void wheelInterrupt(){
+  // only called when the value associated
+  // with the pin has changed
+}
+\end{minted}
 \end{frame}
 
-\begin{frame}{Variables: `volatile'}
+% [fragile] is required for the inline minted listing
+\begin{frame}[fragile]{Variables: `volatile'}
     \Large
     An interrupt can change a variable at any moment. Marking it `volatile' tells the compiler not to cache the value, so the main `loop' always sees what the interrupt wrote.
     \vspace{-.5em}
-    \inputminted{arduino}{./src/arduino-volatile.txt}
+\begin{minted}{arduino}
+// 'volatile' keeps the value in RAM, so the main
+// loop always sees what the interrupt wrote.
+// Required for any variable changed by an interrupt.
+volatile unsigned int wheel_rotations_count = 0;
+\end{minted}
 \end{frame}
 
 \begin{frame}{Lab 4: Hall Effect}

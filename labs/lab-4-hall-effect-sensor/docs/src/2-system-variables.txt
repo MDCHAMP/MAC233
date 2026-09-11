@@ -1,2 +1,0 @@
-unsigned long current_loop_time;
-unsigned volatile long crank_interrupt_current_time;

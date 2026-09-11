@@ -1,9 +1,0 @@
-void loop() {
-  // turn 'on' the LED attached to pin 5
-  digitalWrite(5, HIGH);
-  // turn 'off' the LED attached to pin 5
-  digitalWrite(5, LOW);
-
-  // read the switch attached to pin 3
-  int switch_state = digitalRead(3);
-}

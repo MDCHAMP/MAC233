@@ -1,5 +1,0 @@
-if (output_position >= 6) {
-  output_position = 0;
-} else {
-  output_position++;
-}

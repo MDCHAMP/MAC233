@@ -1,6 +1,0 @@
-if (current_char >= 7) {
-  current_char = 0;
-} else {
-  current_char++;
-}
-delay(TIME_UNIT);

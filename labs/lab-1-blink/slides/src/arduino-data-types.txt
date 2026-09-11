@@ -1,9 +1,0 @@
-int   count     = 10;        // -32,768 to 32,767
-long  big_count = 3000000L;  // +/- 2.1 billion
-float distance  = 5.6;       // decimal number
-bool  ready     = false;     // true or false
-char  letter    = 'M';       // one character
-char  name[3]   = {'M', 'A', 'X'};
-
-unsigned int rotations = 40000;  // no sign, twice the range
-const int LED_PIN = 5;           // read-only, cannot change

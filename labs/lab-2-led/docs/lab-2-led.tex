@@ -113,11 +113,25 @@ Firstly, open your sketch from the previous worksheet into Arduino IDE. Once thi
 
 The first thing we are going to do is create a new definition for a \verb|LED_PIN| which will map to the Arduino Pin D2. To do this, copy the code below at the top of your file (before the Morse code definitions).
 
-\inputminted{arduino}{./src/1-pin-definition.txt}
+\inputminted[
+    autogobble, stripnl,
+    rangestartstring={\#define LED_PIN},
+    rangestopbeforestring={/*},
+]{arduino}{../lab-2-led.ino}
 
 The internal LED on an Arduino is referenced in exactly the same way as you would reference an external pin. This means all we need to do is change anywhere within our code that uses \verb|LED_BUILTIN| to use the newly defined external pin \verb|LED_PIN|. This means changing the code to the following lines:
 
-\inputminted{arduino}{./src/2-pins.txt}
+% not pulled from the sketch: these lines are scattered through setup and loop,
+% and the comments are instructions to the student rather than sketch comments
+\begin{minted}{arduino}
+// this line is in the setup function
+pinMode(LED_PIN, OUTPUT);
+
+// these two lines are in the loop function
+// note: there is a line of code between these two lines
+digitalWrite(LED_PIN, HIGH);
+digitalWrite(LED_PIN, LOW);
+\end{minted}
 
 \section{Try it out on your Arduino}
 You now should be able to compile your sketch (`Sketch' \textrightarrow `Verify\textbackslash Compile') and then upload to your Arduino (`Sketch' \textrightarrow `Upload'). You should see that your Arduino now blinks the externally connected LED in the same pattern as it did on your internal LED.

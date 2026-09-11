@@ -254,46 +254,86 @@
     The Arduino language has some similarities and some important differences from the MATLAB you have seen before.
 \end{frame}
 
-\begin{frame}{Arduino Vs. MATLAB}
+\begin{frame}[fragile]{Arduino Vs. MATLAB}
     \Large
     \textbf{MATLAB} is a dynamically typed language.\\
     This means you can simply declare a variable and MATLAB will figure out what kind of memory is needed automatically:\\
     \vspace{-1.5em}
-    \inputminted{matlab}{./src/matlab-variable.txt}
+    \begin{minted}{matlab}
+x = 10;
+\end{minted}
 
     \vspace{1em}
     \textbf{Arduino} is a statically typed language.\\
     This means when you declare a variable, you must let Arduino know what type of data is contained within the variable:\\
     \vspace{-1.5em}
-    \inputminted{arduino}{./src/arduino-variable.txt}
+    \begin{minted}{arduino}
+int x = 10;
+\end{minted}
 
 \end{frame}
 
-\begin{frame}{The data types you will need}
+\begin{frame}[fragile]{The data types you will need}
     \normalsize
-    \inputminted{arduino}{./src/arduino-data-types.txt}
+    \begin{minted}{arduino}
+int   count     = 10;        // -32,768 to 32,767
+long  big_count = 3000000L;  // +/- 2.1 billion
+float distance  = 5.6;       // decimal number
+bool  ready     = false;     // true or false
+char  letter    = 'M';       // one character
+char  name[3]   = {'M', 'A', 'X'};
+
+unsigned int rotations = 40000;  // no sign, twice the range
+const int LED_PIN = 5;           // read-only, cannot change
+\end{minted}
 \end{frame}
 
-\begin{frame}{Control flow: `if', `else if', `else'}
+\begin{frame}[fragile]{Control flow: `if', `else if', `else'}
     \normalsize
     Code inside the curly brackets runs only when the condition is true. Compare values with $==$, $!=$, $<$, $<=$, $>$ or $>=$, and chain conditions with `and'  ($\&\&$) or `or' ($\|$).\\
     \vspace{-.5em}
-    \inputminted{arduino}{./src/arduino-condition.txt}
+    \begin{minted}{arduino}
+int x = 10;
+if (x > 21) {
+  Serial.println("X is bigger than 21");
+} else if (x >= 11 && x <= 20) {
+  Serial.println("X is between 11 and 20");
+} else if (x != 10) {
+  Serial.println("X is less than 9");
+} else {
+  Serial.println("X is 10");
+}
+\end{minted}
 \end{frame}
 
 
-\begin{frame}{Pins: setting the mode}
+\begin{frame}[fragile]{Pins: setting the mode}
     \normalsize
     Before a pin can be used, the Arduino has to be told which direction it works in. `pinMode' sets a pin to `INPUT' or `OUTPUT', and belongs in `setup' --- it only needs doing once.
     \vspace{.5em}
-    \inputminted{arduino}{./src/arduino-io-mode.txt}
+    \begin{minted}{arduino}
+void setup() {
+  pinMode(3, INPUT);
+  pinMode(5, OUTPUT);
+}
+\end{minted}
 \end{frame}
 
-\begin{frame}{Pins: reading and writing values}
+\begin{frame}[fragile]{Pins: reading and writing values}
     \normalsize
     `digitalWrite' sets an output pin `HIGH' (on) or `LOW' (off). `digitalRead' gives back the `HIGH' or `LOW' state of an input pin. These usually belong in `loop', where they happen over and over.
     \vspace{.5em}
-    \inputminted{arduino}{./src/arduino-io-readwrite.txt}
+    \begin{minted}{arduino}
+void loop() {
+  // turn 'on' the LED attached to pin 5
+  digitalWrite(5, HIGH);
+  // turn 'off' the LED attached to pin 5
+  digitalWrite(5, LOW);
+
+  // read the switch attached to pin 3
+  int switch_state = digitalRead(3);
+}
+\end{minted}
 \end{frame}
 
 
@@ -306,24 +346,40 @@
 \end{frame}
 
 
-\begin{frame}{Sketch basics}
+\begin{frame}[fragile]{Sketch basics}
     \large
     Arduino has two special functions that must exist in a sketch before it can be compiled and uploaded to your board: `setup' and `loop'.\\
 
     \vspace{.25em}
     `File' \textrightarrow `Examples' \textrightarrow `01.Basics' \textrightarrow `BareMinimum':\\
     \vspace{-.5em}
-    {\normalsize\inputminted{arduino}{./src/arduino-minimum.txt}}
+    \begin{minted}[fontsize=\normalsize]{arduino}
+void setup() {
+  // put your setup code here, to run once:
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+}
+\end{minted}
 \end{frame}
 
 % the bare structure is boxed up first so it can be annotated inside a tikzpicture
 \newsavebox{\structurebox}
-\savebox{\structurebox}{%
+\begin{lrbox}{\structurebox}
     \begin{minipage}{.34\textwidth}
         \small
-        \inputminted{arduino}{./src/arduino-structure.txt}
-    \end{minipage}%
+        \begin{minted}{arduino}
+void setup() {
+  // ...
 }
+
+void loop() {
+  // ...
+}
+\end{minted}
+    \end{minipage}
+\end{lrbox}
 
 \begin{frame}{Sketch basics: what runs when}
     \begin{center}
@@ -403,12 +459,25 @@
 
 % code listing is boxed up first so it can be annotated inside a tikzpicture
 \newsavebox{\scopebox}
-\savebox{\scopebox}{%
+\begin{lrbox}{\scopebox}
     \begin{minipage}{.46\textwidth}
         \small
-        \inputminted{arduino}{./src/arduino-anatomy.txt}
-    \end{minipage}%
+        \begin{minted}{arduino}
+// global: usable anywhere
+int wheel_rotations = 0;
+
+void setup() {
+  // local: setup only
+  int setup_rotations = 1;
 }
+
+void loop() {
+  wheel_rotations = 3;  // ok
+  setup_rotations = 4;  // error
+}
+\end{minted}
+    \end{minipage}
+\end{lrbox}
 
 \begin{frame}{Variables: scope}
     \normalsize

@@ -89,11 +89,21 @@ The basis of this system is that we have an LED and a hall effect sensor --- say
 The first thing we need to do is create a blank sketch, this is done by opening Arduino IDE, going to `File'\textrightarrow `Examples'\textrightarrow `01.Basics'\textrightarrow `BareMinimum'. Once this has opened, we can now start to code up the system.
 
 The code within this section should all be placed within the global scope. Like our previous labs, the first piece of code included is defining the external pins and our constants. In our scenario, this is declaring the `$CRANK\_PIN $' for our hall effect sensor, and then our `$CRANK\_ACTIVITY\_LED\_PIN$' for our visual feedback as to when the hall effect sensor has been triggered. The last part of code is defining the 500-millisecond window in which we will activate the LED:\\
-\inputminted{arduino}{./src/1-define.txt}
+% not pulled from the sketch: these sit in two separate blocks with
+% explanatory comments between them
+\begin{minted}{arduino}
+#define CRANK_PIN 2
+#define CRANK_ACTIVITY_LED_PIN 4
+#define CRANK_PASS_ACTIVITY_DELAY 500
+\end{minted}
 \vspace{.75em}
 
 Next, we need two global variables: `$current\_loop\_time$' to store a consistent execution time in milliseconds across the `loop' function, and a `$crank\_interrupt\_current\_time$' to store the time in milliseconds of the last recorded interrupt:\\
-\inputminted{arduino}{./src/2-system-variables.txt}
+\inputminted[
+    autogobble, stripnl,
+    rangestartstring={unsigned volatile long current_loop_time;},
+    rangestopstring={unsigned volatile long crank_interrupt_current_time;},
+]{arduino}{../lab-4-hall-effect-sensor.ino}
 \vspace{.75em}
 
 \textit{Note:} The reason we need to store a consistent time across the `loop' function is that the `loop' function may take 20 milliseconds to execute a full iteration of itself. If you request the current time (the \textit{millis()} function) at the beginning of the code, compared to the end of the code, you would get a different value; therefore, to ensure you have a consistent `current time' across an iteration of the `loop' function, you store the value at the beginning of the iteration and then use that referenced value throughout the function.
@@ -103,24 +113,41 @@ The code required for the setup function can be thought of as three steps: 1 - e
 
 \subsection{Enable debugging tools}
 Enable the debugging through the serial: (\textit{hint:} see section 3.1 of Lab 3):\\
-\inputminted{arduino}{./src/3-setup-debug.txt}
+% not pulled from the sketch: these three lines are spread through setup with
+% other steps between them
+\begin{minted}{arduino}
+Serial.begin(9600);
+delay(3000);
+Serial.println("System Ready");
+\end{minted}
 \vspace{.75em}
 
 \subsection{Initialise global variables}
 Both of the global system variables (`$current\_loop\_time$' \& `$crank\_interrupt\_current\_time$') have been created but have not been initialised; they exist, but they haven't been given any initial value. As both of these variables are of the data type \textit{unsigned long} a logical value for initialisation would be zero (the first possible valid value):\\
-\inputminted{arduino}{./src/4-setup-defaults.txt}
+\inputminted[
+    autogobble, stripnl,
+    rangestartafterstring={// set default values},
+    rangestopbeforestring={// setup LED pin as output},
+]{arduino}{../lab-4-hall-effect-sensor.ino}
 \vspace{.75em}
 
 \subsection{Pins}
 The last thing to do within the `setup' function, is to set up the pins. The LED pin needs to be set to mode \textit{OUTPUT} and then to ensure the LED isn't already on, write to the LED a \textit{LOW} value to turn it off. Next, the hall effect sensor pin needs to be set to mode \textit{INPUT} and an interrupt needs to be added to the pin. In code terms, the interrupt is a separate function that is only called when the interrupt is triggered. In our code, this is a function called `$crankInterrupt$' that we define in the next section of the worksheet. All we are doing in the `setup' function, is referencing the `$crankInterrupt$' function, we do not create the function itself.
 
 There are several options when you attach the interrupt to define when the interrupt function is called. In our case we are using the \textit{FALLING} mode (\url{https://docs.arduino.cc/language-reference/en/functions/external-interrupts/attachInterrupt/#parameters}) as our hall effect sensors report a \textit{HIGH} value when no magnet is present, then the value then drops when a magnet is present:\\
-\inputminted{arduino}{./src/5-setup-io.txt}
+\inputminted[
+    autogobble, stripnl,
+    rangestartafterstring={crank_interrupt_current_time = 0;},
+    rangestopbeforestring={// pause the system},
+]{arduino}{../lab-4-hall-effect-sensor.ino}
 \vspace{.75em}
 
 \section{Interrupt}
 As discussed above, we need a new function that appears in the global scope --- like the `setup' \& `loop' function --- which can be called by the interrupt attached to the hall effect sensor pin. All this method does is record the current time in milliseconds to the `$crank\_interrupt\_current\_time$' variable. As an interrupt is stopping everything else running on an Arduino, you try to keep the code inside the interrupt to the bare minimum required: in our case, this is simply recording the time. All the intensive computational logic is done within the `loop' function --- determining if the LED should be on and thus turning on or off the LED.\\
-\inputminted{arduino}{./src/6-interrupt.txt}
+\inputminted[
+    autogobble, stripnl,
+    rangestartstring={void crankInterrupt()},
+]{arduino}{../lab-4-hall-effect-sensor.ino}
 \vspace{.75em}
 
 \section{Loop function}
@@ -128,12 +155,20 @@ The main logic of the loop can be divided into two steps: 1 - calculate if the l
 
 \subsection{Calculate window}
 The first part for calculating the window is storing into the `$current\_loop\_time$' variable the current time in milliseconds. Next, you calculate if the current time and the last occurrence of the interrupt are within the 500-millisecond window. If true, you turn on the LED with the standard \textit{digitalWrite} method. We also then display a debug message so that if the LED isn't working, we can still see that the logic in the Arduino is working correctly. If the window has passed, we turn off the LED:\\
-\inputminted{arduino}{./src/7-loop-led.txt}
+\inputminted[
+    autogobble, stripnl,
+    rangestartafterstring={// display the crank activity LED},
+    rangestopbeforestring={// delay the system},
+]{arduino}{../lab-4-hall-effect-sensor.ino}
 \vspace{.75em}
 
 \subsection{Wait}
 The final logic within the `loop' function is to wait 50 milliseconds before the next iteration of the `loop' function:\\
-\inputminted{arduino}{./src/8-loop-sleep.txt}
+\inputminted[
+    autogobble, stripnl,
+    rangestartstring={delay(50);},
+    rangestopstring={delay(50);},
+]{arduino}{../lab-4-hall-effect-sensor.ino}
 \vspace{.75em}
 
 \section*{Try it out on your Arduino}

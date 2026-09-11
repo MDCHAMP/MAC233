@@ -1,4 +1,0 @@
-void crankInterrupt() {
-  // record the current time of interrupt in milliseconds
-  crank_interrupt_current_time = millis();
-}

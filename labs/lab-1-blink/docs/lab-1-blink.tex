@@ -57,18 +57,35 @@ The `BareMinimum' sketch does nothing, so you will not see any change on the boa
 \section{Turning on the LED}
 Our first step is to set up the serial connection: this allows us to monitor what the Arduino is doing. Then we can set the internal LED pin to an output mode. The above is done within the `setup' function. Within the main `loop' we set the pin with the LED on to `HIGH'.
 
-\inputminted{arduino}{./src/1-led-on.txt}
+% not pulled from the sketch: this is an intermediate state of the build-up,
+% before the Morse variables exist, so it appears nowhere in the finished file
+\begin{minted}{arduino}
+void setup() {
+  Serial.begin(9600);
+  pinMode(LED_BUILTIN, OUTPUT);
+  delay(3000);
+  Serial.println("System Ready");
+}
+
+void loop() {
+  digitalWrite(LED_BUILTIN, HIGH);
+}
+\end{minted}
 
 Upload this sketch to your Arduino the same way as before (`Sketch' \textrightarrow `Upload'). Then open the serial monitor so you can see the messages the Arduino sends back: `Tools' \textrightarrow `Serial Monitor'. It opens in the bottom section of the IDE, next to the `Output' tab. Set the baud rate drop-down to \textbf{9600} --- this must match the value passed to \verb|Serial.begin| in your sketch, or you will see random characters instead of words.
 
 If everything has worked, your Arduino will power on, wait 3 seconds, display `System Ready' in the serial monitor, and then turn its inbuilt LED on and leave it on.
 
 \section{Add Morse Code variables}
-To make our sketch understand Morse Code, we need to add five lines of code within the global scope. The first line declares that a unit of time is 1000 milliseconds. The second line says that a `dot' is 1 unit of time. The third line states that a `dash' is 3 units of time.
+To make our sketch understand Morse Code, we need to add five lines of code within the global scope. \verb|TIME_UNIT| declares that a unit of time is 1000 milliseconds, \verb|DOT_UNITS| says that a `dot' is 1 unit of time, and \verb|DASH_UNITS| that a `dash' is 3 units of time.
 
-\inputminted{arduino}{./src/2-morse-code-variables.txt}
+\inputminted[
+    autogobble, stripnl,
+    rangestartstring={\#define TIME_UNIT},
+    rangestopstring={int current_char = 0;},
+]{arduino}{../lab-1-blink.ino}
 
-The fourth line creates an array (a vector) of 8 `dots' and `dashes' representing the sequence of signals needed for the word `MAX'. The first two (--) represents M, the next two (.-) represents A, and the last four (-..-) represents X. The fifth and last line stores the current position within the Morse code sequence, initially zero.
+\verb|output| is an array (a vector) of 8 `dots' and `dashes' representing the sequence of signals needed for the word `MAX'. The first two (--) represents M, the next two (.-) represents A, and the last four (-..-) represents X. \verb|current_char| stores the current position within the Morse code sequence, initially zero.
 
 \section{Process the Morse Code message}
 We now need to modify the main `loop' function to correctly process the Morse code message. This is broken down into three stages: calculate the duration to turn the LED on for (see Section \ref{sec:duration}), turn the LED on for the desired duration (see Section \ref{sec:led}), and lastly calculate the next signal to display (see Section \ref{sec:next}).
@@ -81,13 +98,21 @@ At the beginning of the `loop' function, we need to enter the code to calculate 
 
 If the current position within the sequence equals a `.' then we need to set the LED (\verb|led_on_time|) to be on for 1 time unit; however, if the current position within the sequence equals a `-', then we need to set the LED to be on for 3 time units.
 
-\inputminted{arduino}{./src/3-calculate-duration.txt}
+\inputminted[
+    autogobble, stripnl,
+    rangestartafterstring={// calculate amount of time LED is to be on for},
+    rangestopbeforestring={// turn the LED on and off},
+]{arduino}{../lab-1-blink.ino}
 
 \subsection{Turn on the LED}
 \label{sec:led}
 The next logic within the `loop' function needs to be turning on the LED, waiting for the desired duration calculated in the previous step, then turning the LED off again.
 
-\inputminted{arduino}{./src/4-flash-led.txt}
+\inputminted[
+    autogobble, stripnl,
+    rangestartafterstring={// turn the LED on and off},
+    rangestopbeforestring={// determine the next sequence to display},
+]{arduino}{../lab-1-blink.ino}
 
 The `digitalWrite' function is a key action you will often use during these labs. It allows us to write a `HIGH' or `LOW' value to something connected to the Arduino; in our case of an LED, this is an ON and OFF signal. The `delay' is another key function that enables you to pause the sketch on the Arduino for $n$ milliseconds. 
 
@@ -97,7 +122,11 @@ Once you have displayed the current signal to the LED, the final piece of logic 
 
 The logic for this is that if your current signal being displayed is the last signal in the sequence, then you need to start back at zero, else go to the next signal in the sequence.
 
-\inputminted{arduino}{./src/5-next-sequence.txt}
+\inputminted[
+    autogobble, stripnl,
+    rangestartafterstring={// determine the next sequence to display},
+    rangestopstring={delay(TIME_UNIT);},
+]{arduino}{../lab-1-blink.ino}
 
 The last line is the gap between signals. It leaves the LED off for one time unit after each `dot' or `dash', so that two signals in a row do not run into one another --- the 1 second pause described at the start of this worksheet.
 

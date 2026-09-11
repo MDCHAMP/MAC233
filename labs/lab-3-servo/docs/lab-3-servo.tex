@@ -44,28 +44,52 @@ The circuit needed for this worksheet is: Arduino Pin D9\textrightarrow Servo se
 The first thing we need to do is create a blank sketch, this is done by opening Arduino IDE, going to `File'\textrightarrow `Examples'\textrightarrow `01.Basics'\textrightarrow `BareMinimum'. Once this has opened, we can now setup the Servo library.
 
 In the global scope (the top of the file), enter in the code below. This code firstly links our sketch to the servo library, then defines a new named pin called `$SERVO\_PIN$' on pin D9, and then creates an instance of the servo library for us to interact with called `servo'.\\
-\inputminted{arduino}{./src/1-servo-library.txt}
+% not pulled from the sketch: these three lines sit apart in the sketch, with
+% explanatory comment blocks between them that would swamp this step
+\begin{minted}{arduino}
+#include <Servo.h>
+#define SERVO_PIN 9
+Servo servo;
+\end{minted}
 \vspace{.75em}
 
 The next step is for us to declare the array (vector) of integer values we want the sketch to output. For simplicity, we will say for the time being that should be every 30 degrees from 0 to 180. The code below needs to be put into the global scope below the previous code. This code operates on the same logic as Lab 1 and Lab 2; however, instead of having an array of dots and dashes, we now have an array of degrees to rotate the servo to.\\
-\inputminted{arduino}{./src/2-degree-list.txt}
+\inputminted[
+    autogobble, stripnl,
+    rangestartstring={int output[7]},
+    rangestopstring={int output_position = 0;},
+]{arduino}{../lab-3-servo.ino}
 
 \section{Setup function}
 In the setup function of the sketch, we need to do three things: 1 - setup the standard debugging tools, 2 - set the position in the output, 3 - set the output pin and attach it to the servo library. The code in the following sections, needs to go into the `setup' function.
 
 \subsection{Setup debugging}
 The first thing to do in any sketch, is to setup the debugging by connecting the Serial. This allows us to monitor what the Arduino is doing via displaying specific messages at certain points throughout the sketch. This code attaches the serial, pauses the system for 3 seconds, and displays a message `System Ready'.\\
-\inputminted{arduino}{./src/3-setup-debug.txt}
+% not pulled from the sketch: these three lines are spread through setup with
+% other steps between them
+\begin{minted}{arduino}
+Serial.begin(9600);
+delay(3000);
+Serial.println("System Ready");
+\end{minted}
 
 \subsection{Setup output}
 In the global scope, we have already declared the desired output; however, it is always good practice to set any variables that could be changed at different points during the sketch. In our case, this is simply setting the current position in the degree output.
 
-\inputminted{arduino}{./src/4-setup-output.txt}
+\inputminted[
+    autogobble, stripnl,
+    rangestartafterstring={// reset the position},
+    rangestopbeforestring={// set the servo pin to output},
+]{arduino}{../lab-3-servo.ino}
 
 \subsection{Setup servo}
 In the global scope, we have setup the servo library, but we now need to configure the servo library to talk to the correct pins. In our case this is pin D9 that we previously named `$SERVO\_PIN$'. The first thing we need to do is set pin D9 to be an output pin. We can then attach pin D9 to the servo library. Finally, we can set the servo to 0 degrees.
 
-\inputminted{arduino}{./src/5-setup-servo.txt}
+\inputminted[
+    autogobble, stripnl,
+    rangestartafterstring={// set the servo pin to output},
+    rangestopstring={servo.write(0);},
+]{arduino}{../lab-3-servo.ino}
 
 \section{Loop function}
 Now that we have the setup function sorted, we can concentrate on the loop function. Within the loop function, there are three major steps: 1 - write the correct value to the servo, 2 - determine the next position in the `output' array, 3 - wait two seconds before the next iteration. The code in the following sections, needs to go into the `loop' function.
@@ -73,17 +97,29 @@ Now that we have the setup function sorted, we can concentrate on the loop funct
 \subsection{Output to servo}
 At the top of the `loop' function, needs to be the logic to write the correct value within the output to the servo. Thankfully, this is one line of code. We need to access the current position within the output array and then tell the servo to use that value. We also add in an additional line here, to output to the serial connection the selected value so that we can monitor the progress of the sketch.
 
-\inputminted{arduino}{./src/6-loop-write.txt}
+\inputminted[
+    autogobble, stripnl,
+    rangestartafterstring={// move the servo to the correct position},
+    rangestopstring={Serial.println(output[output_position]);},
+]{arduino}{../lab-3-servo.ino}
 
 \subsection{Determine next position}
 The next logic within the `loop' function, is the logic to determine the next position within the output array. Thankfully, this is the same logic that is used to determine the next position within the dots and dashes array in Lab 1.
 
-\inputminted{arduino}{./src/7-loop-next.txt}
+\inputminted[
+    autogobble, stripnl,
+    rangestartafterstring={// determine next position},
+    rangestopbeforestring={// wait 2 seconds},
+]{arduino}{../lab-3-servo.ino}
 
 \subsection{Wait}
 The final logic within the `loop' function, is to wait two seconds until the next iteration. This is done by telling the Arduino to wait 2000 milliseconds.
 
-\inputminted{arduino}{./src/8-loop-sleep.txt}
+\inputminted[
+    autogobble, stripnl,
+    rangestartstring={delay(2000);},
+    rangestopstring={delay(2000);},
+]{arduino}{../lab-3-servo.ino}
 \vspace{-2em}
 
 \section*{Try it out on your Arduino}
