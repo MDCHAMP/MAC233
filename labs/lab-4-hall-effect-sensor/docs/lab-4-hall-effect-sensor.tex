@@ -6,6 +6,7 @@
 \usepackage{qrcode} %qrcode links
 \usepackage{graphicx} %images
 \usepackage{tikz} %diagrams
+\usepackage{parskip}
 \usetikzlibrary{calc}
 
 \linespread{1.3}
@@ -27,13 +28,12 @@
 This lab doesn't require any code from previous labs; however, it does expect you to have completed these, as common code repeated from previous labs will not be explained in detail again here. Out of your Arduino pack, you will need: 1 Arduino, 1 A3144 hall effect sensor, 1 LED, 1 $10K\Omega$ resistor, 1 $220\Omega$ resistor, and 5 jumper cables.
 
 \section*{Objectives}
-The objective of today's lab is to learn how to use an interrupt to record a value of a sensor whose value is changed via an external event: \url{https://docs.arduino.cc/language-reference/en/functions/external-interrupts/attachInterrupt/}.\\
+The objective of today's lab is to learn how to use an interrupt to record a value of a sensor whose value is changed via an external event: \url{https://docs.arduino.cc/language-reference/en/functions/external-interrupts/attachInterrupt/}.
 
-\noindent
 This worksheet will take you through the steps of how to connect a hall effect sensor to your Arduino, monitor when the value of the sensor has changed, and provide visual feedback to an end user of when the value has changed.
 
 \section*{Hall effect sensors}
-In short, a hall effect sensor allows you to detect the presence of a magnet --- the value given by the sensor changes when a magnet is near to it. This type of sensor has many applications, but most importantly for us, is it provides the facility to detect movement and ultimately how quick that movement was.\\
+In short, a hall effect sensor allows you to detect the presence of a magnet --- the value given by the sensor changes when a magnet is near to it. This type of sensor has many applications, but most importantly for us, is it provides the facility to detect movement and ultimately how quick that movement was.
 
 \begin{figure}[ht]
     \begin{center}
@@ -64,51 +64,41 @@ In short, a hall effect sensor allows you to detect the presence of a magnet ---
     \label{fig:hall-effect-sensor}
 \end{figure}
 
-\noindent
-The particular hall effect sensor you have has three legs: a \textit{power} leg, a \textit{ground} leg, and a \textit{digital output} leg. The sensor is shaped like a trapezium. With the short base of the trapezium facing towards you (as depicted in Figure \ref{fig:hall-effect-sensor}) and the legs facing south, the sensor is wired into the Arduino as follows: Arduino +5V\textrightarrow left leg, Arduino GND\textrightarrow middle leg, and Arduino Pin D2\textrightarrow right leg.\\
+The particular hall effect sensor you have has three legs: a \textit{power} leg, a \textit{ground} leg, and a \textit{digital output} leg. The sensor is shaped like a trapezium. With the short base of the trapezium facing towards you (as depicted in Figure \ref{fig:hall-effect-sensor}) and the legs facing south, the sensor is wired into the Arduino as follows: Arduino +5V\textrightarrow left leg, Arduino GND\textrightarrow middle leg, and Arduino Pin D2\textrightarrow right leg.
 
 \section*{Interrupts}
-The purpose of today's lab, is to gain experience of when and how to use an \textit{interrupt} in an Arduino. In previous labs, we have changed the value of an externally connected device using the command \textit{digitalWrite}. You can read the value of a sensor using the command \textit{digitalRead}; however, this method is not always appropriate when you consider when within the event timeline, the value of the sensor may change.\\
+The purpose of today's lab, is to gain experience of when and how to use an \textit{interrupt} in an Arduino. In previous labs, we have changed the value of an externally connected device using the command \textit{digitalWrite}. You can read the value of a sensor using the command \textit{digitalRead}; however, this method is not always appropriate when you consider when within the event timeline, the value of the sensor may change.
 
-\noindent
-If we consider how an Arduino works in context of an event timeline. The Arduino runs the code within the `setup' function, then runs the code in the `loop' function continuously until it is turned off. If we were to put as the first line of the `loop' function \textit{digitalRead(PIN)}, we could capture the value of pin at the beginning of the loop. The Arduino would then execute the rest of the code within the `loop' function, then start the `loop' again, at which point we would then capture the current value of the pin again.\\
+If we consider how an Arduino works in context of an event timeline. The Arduino runs the code within the `setup' function, then runs the code in the `loop' function continuously until it is turned off. If we were to put as the first line of the `loop' function \textit{digitalRead(PIN)}, we could capture the value of pin at the beginning of the loop. The Arduino would then execute the rest of the code within the `loop' function, then start the `loop' again, at which point we would then capture the current value of the pin again.
 
-\noindent
-This design pattern works well in a system that is designed to monitor the gradual change of a value over a period of time --- say capturing the temperature outside every five minutes over a twenty-four-hour period; however, this design pattern fails in a scenario where the sensor value could have changed between the two instances of the \textit{digitalRead} logic. In this scenario you need a way of interrupting the Arduino to pause whatever it is doing, run the required code needed to record a value change, and then continue with its previous operations; an \textit{interrupt}.\\
+This design pattern works well in a system that is designed to monitor the gradual change of a value over a period of time --- say capturing the temperature outside every five minutes over a twenty-four-hour period; however, this design pattern fails in a scenario where the sensor value could have changed between the two instances of the \textit{digitalRead} logic. In this scenario you need a way of interrupting the Arduino to pause whatever it is doing, run the required code needed to record a value change, and then continue with its previous operations; an \textit{interrupt}.
 
-\noindent
-Because being able to interrupt the `loop' function is a special case, there may be restrictions --- depending on your Arduino --- as to which pins this feature is enabled on. In the case of the Nano family of Arduino's, this is digital pins: 2 \& 3 (\url{https://www.arduino.cc/reference/cs/language/functions/external-interrupts/attachinterrupt/}).\\
+Because being able to interrupt the `loop' function is a special case, there may be restrictions --- depending on your Arduino --- as to which pins this feature is enabled on. In the case of the Nano family of Arduino's, this is digital pins: 2 \& 3 (\url{https://www.arduino.cc/reference/cs/language/functions/external-interrupts/attachinterrupt/}).
 
 \section{Creating the circuit}
 \label{sec:circuit}
 There are two circuits needed for this worksheet, the first is for the hall effect sensor (HES), and the second is for the visual display LED.\\
-\noindent
 \textbf{HES circuit}: Arduino +5V\textrightarrow\hspace{0.1em}HES left leg, Arduino GND\textrightarrow\hspace{0.1em}HES middle leg, Arduino Pin D2\textrightarrow\hspace{0.1em}HES right leg. HES left\textrightarrow \hspace{0.1em}$10K\Omega$ resistor\textrightarrow\hspace{0.1em}HES right legs.\\
-\noindent
-\textbf{LED circuit}: Arduino Pin D4\textrightarrow $220\Omega$ resistor\textrightarrow LED\textrightarrow Arduino GND.\\
+\textbf{LED circuit}: Arduino Pin D4\textrightarrow $220\Omega$ resistor\textrightarrow LED\textrightarrow Arduino GND.
 
 
 \section{System Functionality}
 \label{sec:functionality}
-The basis of this system is that we have an LED and a hall effect sensor --- say placed near the crank of a bike --- connected to our Arduino as described in Section \ref{sec:circuit}. We set up the LED as we did in Lab 2 (but on a different pin) and then attach an interrupt to the pin connected with the hall effect sensor. Every time a magnet passes past the field of the hall effect sensor --- say a magnet on the crank arm of a bike --- the associated interrupt code is called, and it records the time in milliseconds of that event. Within the `loop' function, we can then calculate if the last time the interrupt happened, is  within a 500-millisecond window of the current time. If true, we can turn on the LED, if false, we turn off the LED.\\
+The basis of this system is that we have an LED and a hall effect sensor --- say placed near the crank of a bike --- connected to our Arduino as described in Section \ref{sec:circuit}. We set up the LED as we did in Lab 2 (but on a different pin) and then attach an interrupt to the pin connected with the hall effect sensor. Every time a magnet passes past the field of the hall effect sensor --- say a magnet on the crank arm of a bike --- the associated interrupt code is called, and it records the time in milliseconds of that event. Within the `loop' function, we can then calculate if the last time the interrupt happened, is  within a 500-millisecond window of the current time. If true, we can turn on the LED, if false, we turn off the LED.
 
-\noindent
-The first thing we need to do is create a blank sketch, this is done by opening Arduino IDE, going to `File'\textrightarrow `Examples'\textrightarrow `01.Basics'\textrightarrow `BareMinimum'. Once this has opened, we can now start to code up the system.\\
+The first thing we need to do is create a blank sketch, this is done by opening Arduino IDE, going to `File'\textrightarrow `Examples'\textrightarrow `01.Basics'\textrightarrow `BareMinimum'. Once this has opened, we can now start to code up the system.
 
-\noindent
 The code within this section should all be placed within the global scope. Like our previous labs, the first piece of code included is defining the external pins and our constants. In our scenario, this is declaring the `$CRANK\_PIN $' for our hall effect sensor, and then our `$CRANK\_ACTIVITY\_LED\_PIN$' for our visual feedback as to when the hall effect sensor has been triggered. The last part of code is defining the 500-millisecond window in which we will activate the LED:\\
 \vspace{-1.75em}
 \inputminted{arduino}{./src/1-define.txt}
 \vspace{.75em}
 
-\noindent
 Next, we need two global variables: `$current\_loop\_time$' to store a consistent execution time in milliseconds across the `loop' function, and a `$crank\_interrupt\_current\_time$' to store the time in milliseconds of the last recorded interrupt:\\
 \vspace{-1.75em}
 \inputminted{arduino}{./src/2-system-variables.txt}
 \vspace{.75em}
 
-\noindent
-\textit{Note:} The reason we need to store a consistent time across the `loop' function is that the `loop' function may take 20 milliseconds to execute a full iteration of itself. If you request the current time (the \textit{millis()} function) at the beginning of the code, compared to the end of the code, you would get a different value; therefore, to ensure you have a consistent `current time' across an iteration of the `loop' function, you store the value at the beginning of the iteration and then use that referenced value throughout the function.\\
+\textit{Note:} The reason we need to store a consistent time across the `loop' function is that the `loop' function may take 20 milliseconds to execute a full iteration of itself. If you request the current time (the \textit{millis()} function) at the beginning of the code, compared to the end of the code, you would get a different value; therefore, to ensure you have a consistent `current time' across an iteration of the `loop' function, you store the value at the beginning of the iteration and then use that referenced value throughout the function.
 
 \section{Setup function}
 The code required for the setup function can be thought of as three steps: 1 - enable debugging tools, 2 - initialise global values, 3 - set the pins to the correct modes and attach the interrupt.
@@ -126,9 +116,8 @@ Both of the global system variables (`$current\_loop\_time$' \& `$crank\_interru
 \vspace{.75em}
 
 \subsection{Pins}
-The last thing to do within the `setup' function, is to set up the pins. The LED pin needs to be set to mode \textit{OUTPUT} and then to ensure the LED isn't already on, write to the LED a \textit{LOW} value to turn it off. Next, the hall effect sensor pin needs to be set to mode \textit{INPUT} and an interrupt needs to be added to the pin. In code terms, the interrupt is a separate function that is only called when the interrupt is triggered. In our code, this is a function called `$crankInterrupt$' that we define in the next section of the worksheet. All we are doing in the `setup' function, is referencing the `$crankInterrupt$' function, we do not create the function itself.\\
+The last thing to do within the `setup' function, is to set up the pins. The LED pin needs to be set to mode \textit{OUTPUT} and then to ensure the LED isn't already on, write to the LED a \textit{LOW} value to turn it off. Next, the hall effect sensor pin needs to be set to mode \textit{INPUT} and an interrupt needs to be added to the pin. In code terms, the interrupt is a separate function that is only called when the interrupt is triggered. In our code, this is a function called `$crankInterrupt$' that we define in the next section of the worksheet. All we are doing in the `setup' function, is referencing the `$crankInterrupt$' function, we do not create the function itself.
 
-\noindent
 There are several options when you attach the interrupt to define when the interrupt function is called. In our case we are using the \textit{FALLING} mode (\url{https://docs.arduino.cc/language-reference/en/functions/external-interrupts/attachInterrupt/#parameters}) as our hall effect sensors report a \textit{HIGH} value when no magnet is present, then the value then drops when a magnet is present:\\
 \vspace{-1.75em}
 \inputminted{arduino}{./src/5-setup-io.txt}
@@ -168,7 +157,6 @@ If you are having issue compiling the project or don't understand where each sec
 
 \vspace{2em}
 
-\noindent
 Additionally, if you are wondering how to wire up the circuit required for this lab on the breadboard, the electronic wiring diagram is below.
 
 \begin{center}
