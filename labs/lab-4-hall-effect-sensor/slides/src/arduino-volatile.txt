@@ -1,0 +1,4 @@
+// 'volatile' keeps the value in RAM, so the main
+// loop always sees what the interrupt wrote.
+// Required for any variable changed by an interrupt.
+volatile unsigned int wheel_rotations_count = 0;

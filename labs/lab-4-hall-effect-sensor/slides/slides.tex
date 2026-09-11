@@ -96,6 +96,27 @@
     The objective of today's lab is to learn how to use an interrupt to record a value of a sensor whose value is changed via an external event: \url{https://docs.arduino.cc/language-reference/en/functions/external-interrupts/attachInterrupt/}.
 \end{frame}
 
+\begin{frame}{Reading an input: why we need an interrupt}
+    \Large
+    An input could change at any point. As such, we can't rely upon the value to change when we are at a certain point in the `loop' function.\\
+
+    Instead, we have to `interrupt' the main `loop' function to record the value.\\
+
+    The `interrupt' function can be called when the input value is `LOW', `CHANGE', `RISING', or `FALLING'.\\
+\end{frame}
+
+\begin{frame}{Reading an input: `attachInterrupt'}
+    \large
+    \inputminted{arduino}{./src/arduino-io-input.txt}
+\end{frame}
+
+\begin{frame}{Variables: `volatile'}
+    \Large
+    An interrupt can change a variable at any moment. Marking it `volatile' tells the compiler not to cache the value, so the main `loop' always sees what the interrupt wrote.
+    \vspace{-.5em}
+    \inputminted{arduino}{./src/arduino-volatile.txt}
+\end{frame}
+
 \begin{frame}{Lab 4: Hall Effect}
     \begin{center}
         Login to Blackboard: \url{https://vle.shef.ac.uk/}
