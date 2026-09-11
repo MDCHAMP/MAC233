@@ -6,7 +6,34 @@
 \usepackage{qrcode} %qrcode links
 \usepackage{graphicx} %images
 \usepackage{tikz}
+\usepackage{subcaption} %sub-figures
+
 \usepackage{parskip}
+
+% Breadboard connection diagrams: a wire drawn through the centres of every
+% hole that is connected together. All coordinates are fractions of the
+% breadboard image, with (0,0) bottom left and (1,1) top right, so they hold
+% whatever width the image is drawn at.
+\tikzset{
+    wire/.style={line width=.8mm},
+}
+% Geometry below was measured off breadboard.png by fitting the hole centres,
+% not estimated by eye: row n sits at 0.92940 - (n-1)*0.030014 (30 rows, fit
+% residual under half a pixel), and the hole radius is 0.0121 of the width.
+%
+% one numbered row: columns A-E are wired as one group, F-J as another.
+% The wires overhang the end holes so each group reads as separate.
+\newcommand{\rowwire}[1]{%
+    \pgfmathsetmacro{\rowy}{0.92940 - (#1-1)*0.030014}%
+    \draw[wire] (0.2109, \rowy) -- (0.4343, \rowy);
+    \draw[wire] (0.5458, \rowy) -- (0.7692, \rowy);
+}
+% one power rail, connected all the way down the board -- its holes line up
+% with rows 1 to 30. Takes the x-fraction of the column: 0.0835 and 0.1410 on
+% the left, 0.8583 and 0.9155 on the right.
+\newcommand{\railwire}[1]{%
+    \draw[wire] (#1, 0.048) -- (#1, 0.941);
+}
 
 \linespread{1.3}
 \emergencystretch 3em
@@ -14,7 +41,7 @@
 % Set Header and Footer
 \fancyhead{}
 \fancyhead[L]{\textbf{Lab 2: External LED}}
-\fancyhead[R]{d.s.brennan@sheffield.ac.uk}
+\fancyhead[R]{max.champneys@sheffield.ac.uk}
 \fancyfoot{}
 \fancyfoot[L]{\thepage}
 \fancyfoot[R]{MAC 233 Arduino Labs, School of MAC, University of Sheffield}
@@ -31,65 +58,82 @@ The objective of today's lab is to learn how to use an electronic breadboard to 
 
 We will be taking the scenario from the previous worksheet and changing it to communicate with an external LED. Whilst this may sound complex, we are able to use the code from the previous worksheet as a starting point; therefore, it is only one new line of code and changing three existing lines of code.
 
-\section*{Understanding a Breadboard}
+\section{Understanding a Breadboard}
 An electronic breadboard is a useful tool to create quick circuits. It becomes particularly helpful in our use case, as we can place our Arduino within the breadboard without any further adapters.
 
-A breadboard can be thought of as a collection of rows (1\textrightarrow $N$) and columns (A\textrightarrow J). Each row is wired together into two groups --- divided by the centre separator. The first group is the columns A\textrightarrow E (in our example included in Figure \ref{fig:breadboard-groups}), and the second group is columns F\textrightarrow J. Each row is numbered from 1\textrightarrow $N$. Any item plugged into a pin will be accessible by any other pins within that pins row group.
+A breadboard can be thought of as a collection of rows (1\textrightarrow $N$) and columns (A\textrightarrow J), as in Figure \ref{fig:breadboard-plain}. Each row is wired together into two groups, divided by the centre separator. The first group is the columns A\textrightarrow E, and the second group is columns F\textrightarrow J. Each row is numbered from 1\textrightarrow $N$. Any item plugged into a hole will be accessible from any other hole within that same row group. None of this wiring is visible on the board itself, so Figure \ref{fig:breadboard-all} draws it in: any two holes joined by a wire are connected together, and holes on different wires are not.
 
 \begin{figure}[ht!]
     \begin{center}
-        \begin{tikzpicture}[
-            highlight/.style={draw=purple, line width=.25mm},
-        ]
-            %%breadboard
-            \node[] at (0, 0) {\includegraphics[width=.5\textwidth]{./images/breadboard.png}};
-            %%areas
-            \draw[highlight] (-2.36, 5.43) rectangle ++(1.86, 0.3);
-            \draw[highlight] (0.36, 5.43) rectangle ++(1.86, 0.3);
-            \draw[highlight] (-3.54, -5.9) rectangle ++(0.3, 11.65);
-            \draw[highlight] (-3.07, -5.9) rectangle ++(0.3, 11.65);
-        \end{tikzpicture}\\
+        \begin{subfigure}[t]{.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{./images/breadboard.png}
+            \caption{The board as you see it.}
+            \label{fig:breadboard-plain}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}[t]{.45\textwidth}
+            \centering
+            \begin{tikzpicture}
+                %%breadboard
+                \node[anchor=south west, inner sep=0] (bb) at (0, 0)
+                    {\includegraphics[width=\textwidth]{./images/breadboard.png}};
+                \begin{scope}[x={(bb.south east)}, y={(bb.north west)}]
+                    %% every numbered row
+                    \foreach \r in {1,...,30}{ \rowwire{\r} }
+                    %% all four power rails
+                    \railwire{0.0835}
+                    \railwire{0.1410}
+                    \railwire{0.8583}
+                    \railwire{0.9155}
+                \end{scope}
+            \end{tikzpicture}
+            \caption{The same board with the hidden connections drawn in.}
+            \label{fig:breadboard-all}
+        \end{subfigure}\\
+        \vspace{.5em}
         \scriptsize
         Original image source: \url{https://freesvg.org/breadboard}
     \end{center}
-    \caption{An example electronic breadboard. There are four groups highlighted. The positive and negative column groups, and the two groups that are wired together for each row.}
-    \label{fig:breadboard-groups}
+    \caption{An example electronic breadboard, showing which holes are wired together.}
 \end{figure}
 
-For instance, if you plugged the Arduino output for Pin D2 into column H on row 13, you would then be able to plug in an LED leg into column J on row 13. This would create a complete circuit --- given that you have also completed the part of the circuit for the other LED leg.
+For instance, if you plugged the Arduino output for Pin D2 into column H on row 13, you would then be able to plug in an LED leg into column J on row 13. This would create a complete circuit so long as you have also completed the part of the circuit for the other LED leg.
 
-There is also four power rails at either side of the breadboard --- two on the left, and two on the right. The rails on either side are traditionally used for positive and negative power. In our case this would be used for +5v and GND. All the rows within a rails column are considered connected together. Figure \ref{fig:breadboard-groups} depicts the two power rail groups on the left side of the breadboard, as well as depicting the two row groups for row 1.
+There are also four power rails at either side of the breadboard, two on the left and two on the right. In our case these would carry +5V and GND, since that is what the Arduino Nano Every uses. All the holes in a rail's column are connected together: in Figure \ref{fig:breadboard-all} each rail is drawn as a single wire running the full length of the board.
 
 \section{Creating the circuit}
 The circuit needed for this worksheet is: Arduino Pin D2 \textrightarrow $220\Omega$ resistor \textrightarrow LED
 \textrightarrow Arduino GND.
 
-To do this, place your Arduino into the breadboard. Once this is done, use the pin out diagram linked in lecture 1 to find which pin on the Arduino is Pin D2. You then need to connect one leg of the $220\Omega$ resistor to Pin D2 of your Arduino through your breadboard. Then connect the other leg of the $220\Omega$ resistor  --- mind how the rows and columns are connected, ensure the resistor isn't bypassed in the circuit --- to the positive leg of the LED (the longer leg). Finally, connect the negative leg of the LED to the ground PIN on your Arduino through the jumper cable. You won't see anything visual happen at this stage, you need to complete the code tweaks below before the LED will light up.
+To do this, place your Arduino into the breadboard, such that the two rows of pins span the centre of the breadboard (this ensures we do not accidentally connect the pins to each other). Once this is done, use the Nano Every pinout diagram to find which pin on the Arduino is Pin D2: \url{https://docs.arduino.cc/resources/pinouts/ABX00028-full-pinout.pdf}. You then need to connect one leg of the $220\Omega$ resistor to Pin D2 of your Arduino through your breadboard. Then connect the other leg of the $220\Omega$ resistor to the positive leg of the LED (the longer leg). Finally, connect the negative leg of the LED to the ground pin on your Arduino through the jumper cable. You won't see anything visual happen at this stage; you need to write the code below into your sketch before the LED will light up.
 
 \section{Changing the existing code}
-Firstly, open your sketch from the previous worksheet into Arduino IDE. Once this is open, save the sketch under a new name (`File'\textrightarrow `Save As'). This will make sure you still have a copy of the sketch from Lab 1.
+Firstly, open your sketch from the previous worksheet into Arduino IDE. Once this is open, save the sketch under a new name (`File' \textrightarrow `Save As'). This will make sure you still have a copy of the sketch from Lab 1.
 
-The first thing we are going to do is create a new definition for a `$LED\_PIN$' which will map to the Arduino Pin D2. To do this, copy the code below at the top of your file (before the Morse code definitions).
+The first thing we are going to do is create a new definition for a \verb|LED_PIN| which will map to the Arduino Pin D2. To do this, copy the code below at the top of your file (before the Morse code definitions).
 
 \inputminted{arduino}{./src/1-pin-definition.txt}
 
-The internal LED on an Arduino is referenced in exactly the same way as you would reference an external pin. This means all we need to do is change anywhere within our code that uses `$LED\_BUILTIN$', to use the newly defined external pin `$LED\_PIN$'. This means changing the code to the following lines:
+The internal LED on an Arduino is referenced in exactly the same way as you would reference an external pin. This means all we need to do is change anywhere within our code that uses \verb|LED_BUILTIN| to use the newly defined external pin \verb|LED_PIN|. This means changing the code to the following lines:
 
 \inputminted{arduino}{./src/2-pins.txt}
 
-\section*{Try it out on your Arduino}
-You now should be able to compile your sketch (`Sketch'\textrightarrow `Verify/Compile') and then upload to your Arduino (`Sketch'\textrightarrow `Upload'). You should see that your Arduino now blinks the externally connected LED in the same pattern as it did on your internal LED.
+\section{Try it out on your Arduino}
+You now should be able to compile your sketch (`Sketch' \textrightarrow `Verify\textbackslash Compile') and then upload to your Arduino (`Sketch' \textrightarrow `Upload'). You should see that your Arduino now blinks the externally connected LED in the same pattern as it did on your internal LED.
 
 If you have managed to get the external LED to turn on and off with the Morse code signal, see if you can change your code so that `dot' signals are displayed on the internal LED, and `dash' signals are displayed on the external LED.
 
+For a final (harder) challenge, see if you can rewrite the code to show fully decodable Morse code. Real Morse code has rules about the length of the gaps between signals, between letters, and between words. The rules are set out on the Wikipedia page: \url{https://en.wikipedia.org/wiki/Morse_code}.
+
 \pagebreak
 \section*{Help}
-If you are having issue compiling the project or don't understand where each section goes, you can see a complete version of the sketch with additional source code comments at \url{https://github.com/dsbrennan/mac-233-arduino-labs/blob/main/lab-2-led/lab-2-led.ino}.
+If you are having issue compiling the project or don't understand where each section goes, you can see a complete version of the sketch with additional source code comments at \url{https://github.com/MDCHAMP/MAC233/blob/main/labs/lab-2-led/lab-2-led.ino}.
 
 \vspace{2em}
 
 \begin{center}
-    \qrcode[hyperlink, height=4cm]{https://github.com/dsbrennan/mac-233-arduino-labs/blob/main/lab-2-led/lab-2-led.ino}
+    \qrcode[hyperlink, height=6cm]{https://github.com/MDCHAMP/MAC233/blob/main/labs/lab-2-led/lab-2-led.ino}
 \end{center}
 
 \vspace{2em}

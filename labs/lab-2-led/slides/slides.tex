@@ -26,16 +26,16 @@
 %setup cover page variables
 \title{MAC 233: External LED Lab}
 \author{
-    Dr Dan Brennan
+    Dr Max Champneys
 }
-\institute[UoS-DRG]{
+\institute[UoS]{
     School of Mechanical, Aerospace, and Civil Engineering,\\
     University of Sheffield, UK
 }
-\date{MAC 233: \hspace{0.1em}\textbf{22/10/2025}}
+\date{MAC 233: \hspace{0.1em}\textbf{21/10/2026}}
 %setup footer variables
 \runninginstitute{MAC 233, School of MAC, University of Sheffield}
-\email{d.s.brennan@sheffield.ac.uk}
+\email{max.champneys@sheffield.ac.uk}
 
 %Begin Document
 \begin{document}
@@ -84,10 +84,6 @@
     \end{center}
 \end{frame}
 
-\begin{frame}{Variables: Scope}
-    \Large
-    \inputminted{arduino}{./src/arduino-scope.txt}
-\end{frame}
 
 \begin{frame}{Today's Lab: Prerequisites}
     \Large
@@ -103,18 +99,61 @@
     We will be taking the scenario from the previous worksheet and changing it to communicate with an external LED.
 \end{frame}
 
-\begin{frame}{Lab 2: External LED}
+% [fragile] is required: the \verb commands below need it
+\begin{frame}[fragile]{Reminder: `pinMode' and `digitalWrite'}
+    \normalsize
+    
+    \verb|pinMode| sets the IO direction of a pin and belongs in \verb|setup|. 
+    
+    \vspace{.5em}
+
+    \verb|digitalWrite| then sets the pin HIGH (+5V) or LOW (0V).
+    
+    \vspace{.5em}
+    
+{\small\inputminted{arduino}{./src/arduino-led-recap.txt}}
+\end{frame}
+
+\begin{frame}[fragile]{What `HIGH' actually does}
     \begin{center}
-        Login to Blackboard: \url{https://vle.shef.ac.uk/}
         \begin{tikzpicture}[
-            highlight/.style={draw=purple, line width=.25mm},
+            wire/.style={line width=.6mm, draw=black},
+            lbl/.style={font=\small, align=center},
         ]
-            % screenshot
-            \node[] at (0, 0) {\includegraphics[width=.7\textwidth]{./images/lab-2.png}};
-            % highlight
-            \draw[highlight] (-4.15, -.825) rectangle ++(2, 0.4);
+            % the pin
+            \node[lbl, anchor=east] at (-0.15, 0) {Pin D2\\\textbf{HIGH} $= 5$\,V};
+            \draw[wire] (0, 0) -- (1.3, 0);
+
+            % resistor
+            \draw[wire, fill=white] (1.3, -0.22) rectangle (2.6, 0.22);
+            \node[lbl] at (1.95, 0.6) {$220\,\Omega$};
+            \draw[wire] (2.6, 0) -- (3.9, 0);
+
+            % LED
+            \filldraw[draw=black, fill=red!70, line width=.5mm]
+                (3.9, -0.38) -- (3.9, 0.38) -- (4.6, 0) -- cycle;
+            \draw[wire] (4.6, -0.38) -- (4.6, 0.38);
+            \node[lbl] at (4.25, 0.75) {LED};
+            \draw[wire] (4.6, 0) -- (6.0, 0);
+
+            % ground symbol
+            \draw[wire] (6.0, -0.34) -- (6.0, 0.34);
+            \draw[wire] (6.2, -0.20) -- (6.2, 0.20);
+            \draw[wire] (6.4, -0.08) -- (6.4, 0.08);
+            \node[lbl, anchor=west] at (6.6, 0) {GND\\$0$\,V};
+
+            % current
+            \draw[-latex, purple, line width=.4mm] (0.7, -0.95) -- (5.5, -0.95);
+            \node[lbl, color=purple] at (3.1, -1.35) {current flows from 5\,V down to 0\,V};
         \end{tikzpicture}
     \end{center}
+
+    \vspace{.5em}
+    \verb|digitalWrite(LED_PIN, HIGH)| connects the pin to 5\,V, and `LOW' connects it to 0\,V. It is that 5\,V that pushes a current through the LED and lights it.
+
+    \vspace{.75em}
+    The LED itself uses up about 2\,V, so the resistor takes the other 3\,V. With no resistor, nothing limits the current and both the LED and the pin can be damaged.
+
 \end{frame}
 
 \begin{frame}{Wiring Diagram}

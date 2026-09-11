@@ -1,14 +1,15 @@
 /**
  *  Original Author: D S Brennan (github.com/dsbrennan)
  *  Created: 14/02/2025
- * 
+ *  Maintained by: M D Champneys (max.champneys@sheffield.ac.uk)
+ *
  *  Display a morse code message on an external LED:
  *  https://en.wikipedia.org/wiki/Morse_code
  *
  *  This code is based upon the standard arduino blink example:
  *  https://docs.arduino.cc/built-in-examples/basics/Blink/
  *
- *  Copyright 2025, MIT Licence
+ *  Copyright 2025-2026, MIT Licence
  **/
 
 /*
@@ -30,14 +31,14 @@
 
 /*
   The morse code message to display,
-  in this example the word DAN: D (-..) A (.-) N (-.)
+  in this example the word MAX: M (--) A (.-) X (-..-)
 */
-char output[7] = { '-', '.', '.', '.', '-', '-', '.' };
+char output[8] = { '-', '-', '.', '-', '-', '.', '.', '-' };
 int current_char = 0;
 
 void setup() {
   /*
-    This method is run once, evertime your arduino is turned on.
+    This method is run once, every time your arduino is turned on.
     You should put any code in here that needs to have run before
     the 'loop' method.
   */
@@ -55,7 +56,7 @@ void setup() {
 
 void loop() {
   /*
-    This method is called on a loop untill your arduino is turned off.
+    This method is called on a loop until your arduino is turned off.
     The main logic for your code should be present within this method.
   */
 
@@ -75,12 +76,12 @@ void loop() {
   digitalWrite(LED_PIN, LOW);
 
   // determine the next sequence to display
-  if (current_char >= 6) {
+  if (current_char >= 7) {
     current_char = 0;
   } else {
     current_char++;
   }
 
-  // delay till next itteration
+  // delay till next iteration
   delay(TIME_UNIT);
 }
