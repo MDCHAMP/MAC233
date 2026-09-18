@@ -6,7 +6,7 @@ This repository contains all the documentation, code and information you will ne
 
 The Arduino labs run over seven weeks, in two halves: four standalone lab activities, then three weeks building a control system for your mini-bike rig.
 
-![Course timeline: weeks 3 to 6 are standalone lab activities — Arduino introduction, LED, Servo, Hall Effect Sensors — and weeks 7 to 9 are spent developing the control system.](images/timeline.png)
+![Course timeline: weeks 3 to 6 are standalone lab activities — Arduino introduction, LED, Servo, Hall Effect Sensors — and weeks 7 to 9 are spent developing the control system.](labs/lab-1-blink/images/timeline.png)
 
 Each lab builds on the one before it, so work through them in order.
 
