@@ -1,7 +1,7 @@
 # Upstream source material (Dan Brennan's original repos) - not distributed
 .Dan/
 
-# GTA-only material - must never reach students
+# GTA-only material - not for students
 gta-guide.tex
 gta-guide.pdf
 **/gta-guide/
