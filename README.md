@@ -4,7 +4,7 @@ This repository contains all the documentation, code and information you will ne
 
 ## Timeline
 
-The course runs over seven weeks, in two halves: four standalone lab activities, then three weeks building a control system for your mini-bike rig.
+The Arduino labs run over seven weeks, in two halves: four standalone lab activities, then three weeks building a control system for your mini-bike rig.
 
 ![Course timeline: weeks 3 to 6 are standalone lab activities — Arduino introduction, LED, Servo, Hall Effect Sensors — and weeks 7 to 9 are spent developing the control system.](images/timeline.png)
 
@@ -18,7 +18,7 @@ In the IDE, go to `Tools` → `Board` → `Select Other Board and Port`, search 
 
 Keep the [Nano Every pinout diagram](https://docs.arduino.cc/resources/pinouts/ABX00028-full-pinout.pdf) to hand: every lab refers to it when telling you which pin to wire something to.
 
-If you have not used the Arduino IDE before, Lab 1 walks through all of this step by step — start there.
+If you have not used the Arduino IDE before, Lab 1 walks through all of this step by step, start there!
 
 ## Labs
 
