@@ -1,10 +1,11 @@
 /**
  *  Original Author: D S Brennan (github.com/dsbrennan)
  *  Created: 20/02/2025
+ *  Maintained by: M D Champneys (max.champneys@sheffield.ac.uk)
  *
  *  Rotate an external servo in a loop
  *
- *  Copyright 2025, MIT Licence
+ *  Copyright 2025-2026, MIT Licence
  **/
 #include <Servo.h>
 
@@ -29,7 +30,7 @@ int output_position = 0;
 
 void setup() {
   /*
-    This method is run once, evertime your arduino is turned on.
+    This method is run once, every time your arduino is turned on.
     You should put any code in here that needs to have run before
     the 'loop' method.
   */
@@ -51,7 +52,7 @@ void setup() {
 
 void loop() {
   /*
-    This method is called on a loop untill your arduino is turned off.
+    This method is called on a loop until your arduino is turned off.
     The main logic for your code should be present within this method.
   */
 
@@ -66,6 +67,6 @@ void loop() {
     output_position++;
   }
 
-  // wait 2 seconds untill the next itteration
+  // wait 2 seconds until the next iteration
   delay(2000);
 }

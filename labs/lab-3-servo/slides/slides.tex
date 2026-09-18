@@ -26,16 +26,16 @@
 %setup cover page variables
 \title{MAC 233: Servo Lab}
 \author{
-    Dr Dan Brennan
+    Dr Max Champneys
 }
-\institute[UoS-DRG]{
+\institute[UoS]{
     School of Mechanical, Aerospace, and Civil Engineering,\\
     University of Sheffield, UK
 }
-\date{MAC 233: \hspace{0.1em}\textbf{29/10/2025}}
+\date{MAC 233: \hspace{0.1em}\textbf{28/10/2026}}
 %setup footer variables
 \runninginstitute{MAC 233, School of MAC, University of Sheffield}
-\email{d.s.brennan@sheffield.ac.uk}
+\email{max.champneys@sheffield.ac.uk}
 
 %Begin Document
 \begin{document}
@@ -86,9 +86,9 @@
 
 \begin{frame}{Today's Lab: Prerequisites}
     \Large
-    This worksheet builds upon the theory of how to use an external pin that was covered in the Lab 2 worksheet. Whilst you won't need any code from Lab 2, you will need to have covered how to use an electronic breadboard and how to wire up an external output to an Arduino pin. \\
-    
-    Out of your Arduino pack, you will need: 1 Arduino, 1 Servo, and 3 jumper cables.
+    This worksheet builds upon the theory of how to use an external pin that was covered in the Lab 2 worksheet. Whilst you won't need any code from Lab 2, you will need to have covered how to use a breadboard and how to wire up an external output to an Arduino pin. \\
+
+    Out of your Arduino pack, you will need: 1 Arduino, 1 breadboard, 1 servo, and 3 jumper cables.
 \end{frame}
 
 \begin{frame}{Today's Lab: Objectives}
@@ -98,18 +98,88 @@
     The worksheet will take you through the steps of how to connect an external servo to your Arduino and create a sketch that rotates the servo in increments of 30 degrees.
 \end{frame}
 
-\begin{frame}{Lab 3: Servo}
+\begin{frame}{What is a servo?}
     \begin{center}
-        Login to Blackboard: \url{https://vle.shef.ac.uk/}
         \begin{tikzpicture}[
-            highlight/.style={draw=purple, line width=.25mm},
+            wire/.style={line width=.7mm},
+            lbl/.style={font=\small, align=left},
         ]
-            % screenshot
-            \node[] at (0, 0) {\includegraphics[width=.7\textwidth]{../images/lab-3.png}};
-            % highlight
-            \draw[highlight] (-4.15, -1.2) rectangle ++(2, 0.4);
+            % sweep the arm can cover
+            \draw[dashed, draw=gray] (2.1, 1.75) ++(0:1.3) arc (0:180:1.3);
+            \node[font=\scriptsize, color=gray] at (3.75, 1.6) {$0^\circ$};
+            \node[font=\scriptsize, color=gray] at (0.45, 1.6) {$180^\circ$};
+
+            % body, output shaft and arm
+            \filldraw[fill=SteelBlue, draw=black, line width=.4mm] (1.1, 0) rectangle (3.1, 1.6);
+            \filldraw[fill=white, draw=black, line width=.4mm] (2.1, 1.75) circle (0.22);
+            \draw[line width=.8mm, draw=purple, line cap=round] (2.1, 1.75) -- ++(35:1.1);
+
+            % the three wires
+            \draw[wire, draw=brown] (1.1, 1.15) -- (-0.4, 1.15);
+            \draw[wire, draw=red]   (1.1, 0.8)  -- (-0.4, 0.8);
+            \draw[wire, draw=orange](1.1, 0.45) -- (-0.4, 0.45);
+            \node[lbl, anchor=east] at (-0.5, 1.15) {ground (brown)};
+            \node[lbl, anchor=east] at (-0.5, 0.8)  {power (red)};
+            \node[lbl, anchor=east] at (-0.5, 0.45) {signal (orange)};
         \end{tikzpicture}
     \end{center}
+
+    \vspace{.5em}
+    A servo is a motor with a gearbox and a small control circuit built into it. You tell it an \emph{angle}, and it turns to that angle and holds it there.
+
+    \vspace{.5em}
+    Two of its wires just supply power. The third carries the signal that tells the servo which angle you want.
+\end{frame}
+
+% [fragile] is required: the \verb commands below need it
+\begin{frame}[fragile]{New: the Servo library}
+    \large
+    \begin{itemize}
+        \setlength{\itemsep}{1em}
+        \item \mintinline[fontsize=\large]{arduino}{#include <Servo.h>}\\
+            makes the library available to your sketch
+        \item \mintinline[fontsize=\large]{arduino}{Servo servo;}\\
+            creates a servo for you to control
+        \item \mintinline[fontsize=\large]{arduino}{servo.attach(SERVO_PIN);}\\
+            says which pin the signal wire is on --- once, in \mintinline{arduino}{setup}
+        \item \mintinline[fontsize=\large]{arduino}{servo.write(90);}\\
+            moves the servo to an angle between 0 and 180 degrees
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{What `servo.write' actually does}
+    \begin{center}
+        \begin{tikzpicture}[
+            scale=.85,
+            signal/.style={line width=.5mm, draw=black},
+            arm/.style={line width=.8mm, draw=purple, line cap=round},
+            lbl/.style={font=\small, align=center},
+        ]
+            % one row per angle: pulse width (1 ms = 0.6 units), row height, angle
+            \foreach \w/\y/\ang/\ms in {0.33/0/0/0.5, 0.9/-1.4/90/1.5, 1.44/-2.8/180/2.4}{
+                % two pulses of the repeating signal
+                \draw[signal] (0, \y) -- (0.3, \y) -- (0.3, \y+0.7) -- (0.3+\w, \y+0.7) -- (0.3+\w, \y)
+                    -- (4.3, \y) -- (4.3, \y+0.7) -- (4.3+\w, \y+0.7) -- (4.3+\w, \y) -- (6.4, \y);
+                \node[lbl, right] at (0.35+\w, \y+0.45) {\ms\,ms};
+
+                % the servo arm it produces
+                \draw[-latex, line width=.4mm] (6.8, \y+0.35) -- (7.8, \y+0.35);
+                \filldraw[fill=white, draw=black, line width=.4mm] (8.9, \y+0.35) circle (0.14);
+                \draw[arm] (8.9, \y+0.35) ++(180-\ang:0.14) -- ++(180-\ang:0.7);
+                \node[lbl, anchor=west] at (10, \y+0.35) {\ang$^\circ$};
+            }
+
+            % the repeat period
+            \draw[line width=.4mm, decorate, decoration={brace, amplitude=5pt, mirror}] (0.3, -3.1) -- (4.3, -3.1);
+            \node[lbl] at (2.3, -3.65) {repeats every 16\,ms (not to scale)};
+        \end{tikzpicture}
+    \end{center}
+
+    \vspace{.25em}
+    The Servo library sends a short 5\,V pulse every 16\,ms, and the \emph{width} of that pulse tells the servo which angle to turn to.
+    % 20ms on some older AVR boards
+    % note that this is MUCH slower than the 'true' servo
+
 \end{frame}
 
 \begin{frame}{Wiring Diagram}
@@ -146,7 +216,34 @@
         \end{tikzpicture}
     \end{center}
     \tiny
-    Breadboard source: \url{https://freesvg.org/breadboard}, Resistor source \url{https://freesvg.org/resistor-330-ohm}.
+    Breadboard source: \url{https://freesvg.org/breadboard}.
+\end{frame}
+
+\begin{frame}{Help}
+    \Large
+
+    \normalsize
+    \begin{columns}
+        \begin{column}{.5\textwidth}
+            \begin{center}
+                \textbf{Lab 3 worksheet}\\
+                \vspace{.5em}
+                \qrcode[hyperlink, height=3cm]{https://github.com/MDCHAMP/MAC233/blob/main/labs/lab-3-servo/docs/lab-3-servo.pdf}
+            \end{center}
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \begin{center}
+                \textbf{Nano Every pinout}\\
+                \vspace{.5em}
+                \qrcode[hyperlink, height=3cm]{https://docs.arduino.cc/resources/pinouts/ABX00028-full-pinout.pdf}
+            \end{center}
+        \end{column}
+    \end{columns}
+
+
+    \vspace{3.5em}
+    Problems? Raise your hand and someone will come and help you.
+
 \end{frame}
 
 \end{document}
