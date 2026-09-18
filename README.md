@@ -4,6 +4,22 @@ This repository contains all the documentation, code and information you will ne
 
 ## Timeline
 
+The course runs over seven weeks, in two halves: four standalone lab activities, then three weeks building a control system for your mini-bike rig.
+
+![Course timeline: weeks 3 to 6 are standalone lab activities — Arduino introduction, LED, Servo, Hall Effect Sensors — and weeks 7 to 9 are spent developing the control system.](images/timeline.png)
+
+Each lab builds on the one before it, so work through them in order.
+
+## Getting started
+
+You will need the [Arduino IDE](https://www.arduino.cc/en/software) and an **Arduino Nano Every**.
+
+In the IDE, go to `Tools` → `Board` → `Select Other Board and Port`, search for `nano every`, and select both the board **and** the port — selecting only the board will let you compile, but not upload.
+
+Keep the [Nano Every pinout diagram](https://docs.arduino.cc/resources/pinouts/ABX00028-full-pinout.pdf) to hand: every lab refers to it when telling you which pin to wire something to.
+
+If you have not used the Arduino IDE before, Lab 1 walks through all of this step by step — start there.
+
 ## Labs
 
 During weeks 3-6 we will complete standalone lab activities. All the required information can be found below. If you finish a lab early, feel free to move onto the next one. 
@@ -20,4 +36,12 @@ During weeks 3-6 we will complete standalone lab activities. All the required in
 ## Control system
 
 During weeks 7-9, you will work on developing a control system for your e-bike. By week 7 you should have completed the manufacturing for your mini-bike rig and so we will use this to test our control systems.
+
+The starting sketch is here: [control-system.ino](control-system/control-system.ino). Worksheets and slides for these weeks will follow.
+
+## Licence and attribution
+
+This material was originally written by Dr Dan Brennan ([github.com/dsbrennan](https://github.com/dsbrennan)) and is now maintained by Dr Max Champneys (max.champneys@sheffield.ac.uk).
+
+Released under the MIT Licence.
 
