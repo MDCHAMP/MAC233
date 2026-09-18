@@ -26,16 +26,16 @@
 %setup cover page variables
 \title{MAC 233: Hall Effect Sensor Lab}
 \author{
-    Dr Dan Brennan
+    Dr Max Champneys
 }
-\institute[UoS-DRG]{
+\institute[UoS]{
     School of Mechanical, Aerospace, and Civil Engineering,\\
     University of Sheffield, UK
 }
-\date{MAC 233: \hspace{0.1em}\textbf{05/11/2025}}
+\date{MAC 233: \hspace{0.1em}\textbf{04/11/2026}}
 %setup footer variables
 \runninginstitute{MAC 233, School of MAC, University of Sheffield}
-\email{d.s.brennan@sheffield.ac.uk}
+\email{max.champneys@sheffield.ac.uk}
 
 %Begin Document
 \begin{document}
@@ -88,69 +88,122 @@
     \Large
     This lab doesn't require any code from previous labs; however, it does expect you to have completed these, as common code repeated from previous labs will not be explained in detail again here.\\
     
-    Out of your Arduino pack, you will need: 1 Arduino, 1 A3144 hall effect sensor, 1 LED, 1 $10K\Omega$ resistor, 1 $220\Omega$ resistor, and 5 jumper cables.
+    Out of your Arduino pack, you will need: 1 Arduino, 1 breadboard, 1 A3144 hall effect sensor, 1 magnet, 1 LED, 1 $10K\Omega$ resistor, 1 $220\Omega$ resistor, and 5 jumper cables.
 \end{frame}
 
 \begin{frame}{Today's Lab: Objectives}
     \Large
-    The objective of today's lab is to learn how to use an interrupt to record a value of a sensor whose value is changed via an external event: \url{https://docs.arduino.cc/language-reference/en/functions/external-interrupts/attachInterrupt/}.
+    The objective of today's lab is to learn how to use an interrupt to record a value of a Hall effect sensor when a magnet passes it.
+    \vspace{.5em}
+    
+    \url{https://docs.arduino.cc/language-reference/en/functions/external-interrupts/attachInterrupt/}.
 \end{frame}
 
 \begin{frame}{Reading an input: why we need an interrupt}
-    \Large
-    An input could change at any point. As such, we can't rely upon the value to change when we are at a certain point in the `loop' function.\\
+    \begin{center}
+        \begin{tikzpicture}[
+            x=.72cm, y=.72cm,
+            signal/.style={line width=.5mm},
+            iter/.style={line width=.3mm, fill=black!5},
+            readline/.style={dashed, draw=gray, line width=.3mm},
+            lbl/.style={font=\small},
+        ]
+            %% polling: the pin is only read at the start of each iteration
+            \node[lbl, anchor=east] at (10, 5.3) {Sensor};
+            \draw[signal] (0, 4.6) -- (4.8, 4.6) -- (4.8, 3.4)
+                -- (5.8, 3.4) -- (5.8, 4.6) -- (10, 4.6);
 
-    Instead, we have to `interrupt' the main `loop' function to record the value.\\
+            \node[lbl, anchor=south west] at (0, 4.75) {\texttt{digitalRead}};
+            \foreach \s in {0, 3.4, 6.8}{
+                \draw[iter] (\s, 0) rectangle ++(3.1, 1.2);
+                \draw[readline] (\s, 1.2) -- (\s, 4.6);
+                \filldraw (\s, 1.2) circle (1.6pt);
+            }
 
-    The `interrupt' function can be called when the input value is `LOW', `CHANGE', `RISING', or `FALLING'.\\
+            \draw[->, line width=.3mm] (0, -0.7) -- (10, -0.7);
+            \node[lbl, anchor=north east] at (10, -0.85) {time};
+            \node[lbl, anchor=north west] at (0, -0.85) {each \texttt{loop} iteration};
+        \end{tikzpicture}
+    \end{center}
+
+    \vspace{.5em}
+    An input can change at any moment, but the `loop' function only looks at it once per iteration. A magnet that comes and goes in between is never seen.
+\end{frame}
+
+\begin{frame}{Reading an input: the interrupt}
+    \begin{center}
+        \begin{tikzpicture}[
+            x=.72cm, y=.72cm,
+            signal/.style={line width=.5mm},
+            iter/.style={line width=.3mm, fill=black!5},
+            lbl/.style={font=\small},
+        ]
+            %% the falling edge interrupts the loop the moment it happens
+            \node[lbl, anchor=east] at (10, 5.3) {Sensor};
+            \draw[signal] (0, 4.6) -- (4.8, 4.6) -- (4.8, 3.4)
+                -- (5.8, 3.4) -- (5.8, 4.6) -- (10, 4.6);
+
+            \foreach \s in {0, 3.4, 6.8}{
+                \draw[iter] (\s, 0) rectangle ++(3.1, 1.2);
+            }
+
+            \filldraw[fill=purple, draw=purple] (4.65, 0) rectangle ++(0.55, 1.2);
+            \draw[->, line width=.4mm, draw=purple] (4.8, 3.3) -- (4.8, 1.35);
+            \node[lbl, anchor=west, text=purple] at (5.3, 2.3) {interrupt};
+
+            \draw[->, line width=.3mm] (0, -0.7) -- (10, -0.7);
+            \node[lbl, anchor=north east] at (10, -0.85) {time};
+            \node[lbl, anchor=north west] at (0, -0.85) {each \texttt{loop} iteration};
+        \end{tikzpicture}
+    \end{center}
+
+    \vspace{.5em}
+    An interrupt pauses the `loop' function the moment the pin changes, runs a function of your choosing, and then carries on where it left off.
 \end{frame}
 
 % [fragile] is required for the inline minted listing
-\begin{frame}[fragile]{Reading an input: `attachInterrupt'}
-    \large
-\begin{minted}{arduino}
-void setup() {
-  // set pin 3 to an input
-  pinMode(3, INPUT);
-  // when the input value of pin 3 falls
-  // call the function 'wheelInterrupt'
-  attachInterrupt(
-    digitalPinToInterrupt(3), wheelInterrupt, FALLING
-  );
-}
+\begin{frame}[fragile]{New: `attachInterrupt'}
+    \normalsize
+    One line in \verb|setup| says which pin to watch, which function to call, and when:
+    \vspace{.5em}
+\begin{minted}[fontsize=\footnotesize]{arduino}
+attachInterrupt(digitalPinToInterrupt(CRANK_PIN), crankInterrupt, FALLING);
+\end{minted}
+    \vspace{.5em}
+    \begin{itemize}
+        \setlength{\itemsep}{.6em}
+        \item \mintinline{arduino}{digitalPinToInterrupt(CRANK_PIN)} --- the pin to watch
+        \item \mintinline{arduino}{crankInterrupt} --- the function to call, with no brackets
+        \item \mintinline{arduino}{FALLING} --- when: as the pin drops from 5\,V to 0\,V
+    \end{itemize}
+\end{frame}
 
-void wheelInterrupt(){
-  // only called when the value associated
-  // with the pin has changed
+% [fragile] is required for the inline minted listing
+\begin{frame}[fragile]{New: the interrupt function}
+    \normalsize
+    The function you named is an ordinary function, written beside \verb|setup| and \verb|loop| --- never inside them:
+    \vspace{.5em}
+\begin{minted}[fontsize=\small]{arduino}
+void crankInterrupt() {
+  crank_interrupt_current_time = millis();
 }
 \end{minted}
+    \vspace{.5em}
+    It runs the moment the magnet arrives, whatever the `loop' function was part-way through. Keep it as short as you can: record what you need, and get out.
 \end{frame}
 
 % [fragile] is required for the inline minted listing
 \begin{frame}[fragile]{Variables: `volatile'}
     \Large
     An interrupt can change a variable at any moment. Marking it `volatile' tells the compiler not to cache the value, so the main `loop' always sees what the interrupt wrote.
-    \vspace{-.5em}
-\begin{minted}{arduino}
-// 'volatile' keeps the value in RAM, so the main
-// loop always sees what the interrupt wrote.
-// Required for any variable changed by an interrupt.
-volatile unsigned int wheel_rotations_count = 0;
-\end{minted}
-\end{frame}
+    \vspace{.75em}
+\begin{minted}[fontsize=\small]{arduino}
+// written by the interrupt, read by the loop
+volatile unsigned long crank_interrupt_current_time;
 
-\begin{frame}{Lab 4: Hall Effect}
-    \begin{center}
-        Login to Blackboard: \url{https://vle.shef.ac.uk/}
-        \begin{tikzpicture}[
-            highlight/.style={draw=purple, line width=.25mm},
-        ]
-            % screenshot
-            \node[] at (0, 0) {\includegraphics[width=.7\textwidth]{../images/lab-4.png}};
-            % highlight
-            \draw[highlight] (-4.15, -1.65) rectangle ++(2, 0.4);
-        \end{tikzpicture}
-    \end{center}
+// only ever touched by the loop, so no volatile
+unsigned long current_loop_time;
+\end{minted}
 \end{frame}
 
 \begin{frame}{Wiring Diagram}
@@ -196,6 +249,33 @@ volatile unsigned int wheel_rotations_count = 0;
     \end{center}
     \tiny
     Breadboard source: \url{https://freesvg.org/breadboard}, Resistor source \url{https://freesvg.org/resistor-330-ohm}.
+\end{frame}
+
+\begin{frame}{Help}
+    \Large
+
+    \normalsize
+    \begin{columns}
+        \begin{column}{.5\textwidth}
+            \begin{center}
+                \textbf{Lab 4 worksheet}\\
+                \vspace{.5em}
+                \qrcode[hyperlink, height=3cm]{https://github.com/MDCHAMP/MAC233/blob/main/labs/lab-4-hall-effect-sensor/docs/lab-4-hall-effect-sensor.pdf}
+            \end{center}
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \begin{center}
+                \textbf{Nano Every pinout}\\
+                \vspace{.5em}
+                \qrcode[hyperlink, height=3cm]{https://docs.arduino.cc/resources/pinouts/ABX00028-full-pinout.pdf}
+            \end{center}
+        \end{column}
+    \end{columns}
+
+
+    \vspace{3.5em}
+    Problems? Raise your hand and someone will come and help you.
+
 \end{frame}
 
 \end{document}

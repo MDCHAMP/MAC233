@@ -1,11 +1,12 @@
 /**
  *  Original Author: D S Brennan (github.com/dsbrennan)
  *  Created: 25/02/2025
+ *  Maintained by: M D Champneys (max.champneys@sheffield.ac.uk)
  *
  *  Light up an LED when a hall effect sensor triggers
  *  an interrupt.
  *
- *  Copyright 2025, MIT Licence
+ *  Copyright 2025-2026, MIT Licence
  **/
 
 /*
@@ -24,12 +25,12 @@
 /*
   System variables
  */
-unsigned volatile long current_loop_time;
-unsigned volatile long crank_interrupt_current_time;
+unsigned long current_loop_time;
+volatile unsigned long crank_interrupt_current_time;
 
 void setup() {
   /*
-    This method is run once, evertime your arduino is turned on.
+    This method is run once, every time your arduino is turned on.
     You should put any code in here that needs to have run before
     the 'loop' method.
   */
@@ -52,7 +53,7 @@ void setup() {
 
 void loop() {
   /*
-    This method is called on a loop untill your arduino is turned off.
+    This method is called on a loop until your arduino is turned off.
     The main logic for your code should be present within this method.
   */
   
@@ -71,7 +72,7 @@ void loop() {
 
 void crankInterrupt() {
   /*
-    This method is called everytime the hall effect sensor value is changed
+    This method is called every time the hall effect sensor value is changed
     within the boundaries defined in setup.
   */
 
