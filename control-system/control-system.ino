@@ -47,10 +47,6 @@ float motor_power = 0;                                      //
 const int startup_time = 3000;                              //
 //////////////////////////////////////////////////////////////
 
-// ramp-up / down constants
-const float motor_step_up = 0.008;
-const float motor_step_down = 0.01;
-
 /*
   System Setup
   ---------------------
@@ -117,8 +113,13 @@ void loop() {
   // your control system code goes here!
   //////////////////////////////////////////////////////////////
   // A simple example of a control system.
-  // only assist the rider while they are pedalling, 
+  // only assist the rider while they are pedalling,
   // and only below the speed limit.
+
+  // how quickly the motor ramps up and down, per loop
+  const float motor_step_up = 0.008;
+  const float motor_step_down = 0.01;
+
   if (
       // the cranks are turning fast enough to count as pedalling
       crank_rpm > pedal_threshold_rpm
@@ -134,7 +135,7 @@ void loop() {
     motor_power = motor_power - motor_step_down;
   }
   motor_power = constrain(motor_power, 0.0, 1.0); // change the power output to the motor
-  motor_demand(motor_power);
+  motor_demand(motor_power); // send that power to the motor
   //////////////////////////////////////////////////////////////
 
   // display message
