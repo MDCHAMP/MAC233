@@ -35,9 +35,11 @@ During weeks 3-6 we will complete standalone lab activities. All the required in
 
 ## Control system
 
-During weeks 7-9, you will work on developing a control system for your e-bike. By week 7 you should have completed the manufacturing for your mini-bike rig and so we will use this to test our control systems.
+During weeks 7-9, you will work on developing a control system for your e-bike. You don't need your mini-bike rig to get started: the first build steps only need your Arduino kit and a magnet, and you will move the system onto your rig once it is ready.
 
-The starting sketch is here: [control-system.ino](control-system/control-system.ino). Worksheets and slides for these weeks will follow.
+| Weeks | Sketch | Worksheet | Slides |
+|---|---|---|---|
+| 7-9 | [ino](control-system/control-system.ino) | [pdf](control-system/docs/control-system.pdf) | [phases 0-1](control-system/slides/phases-0-1.pdf), [phase 2](control-system/slides/phase-2.pdf) |
 
 ## Licence and attribution
 

@@ -14,6 +14,7 @@
 #define SYSTEM_READY_LED_PIN 4                              //
 #define CRANK_ACTIVITY_LED_PIN 5                            //
 #define MOTOR_ACTIVITY_LED_PIN 6                            //
+#define WHEEL_ACTIVITY_LED_PIN 7                            //
 #define MOTOR_LOAD_PIN 10                                   //
 #define CRANK_PIN 2                                         //
 #define WHEEL_PIN 3                                         //
@@ -21,6 +22,7 @@
 // safety: do not change these values                       //
 #define CRANK_PASS_ACTIVITY_DELAY 500                       //
 #define CRANK_PASS_MAXIMUM_DELAY 3000                       //
+#define WHEEL_PASS_ACTIVITY_DELAY 500                       //
 #define WHEEL_PASS_MINIMUM_DELAY 200                        //
 #define WHEEL_PASS_MAXIMUM_DELAY 3000                       //
 #define WHEEL_MAXIMUM_SPEED 25.0                            //
@@ -61,7 +63,9 @@ void setup() {
   digitalWrite(CRANK_ACTIVITY_LED_PIN, LOW);
   pinMode(MOTOR_ACTIVITY_LED_PIN, OUTPUT);
   digitalWrite(MOTOR_ACTIVITY_LED_PIN, LOW);
-  // motor load MOSFET gate
+  pinMode(WHEEL_ACTIVITY_LED_PIN, OUTPUT);
+  digitalWrite(WHEEL_ACTIVITY_LED_PIN, LOW);
+  // motor driver
   pinMode(MOTOR_LOAD_PIN, OUTPUT);
   // motor output
   esc.attach(ESC_PIN, esc_neutral, esc_full_power);
@@ -71,10 +75,10 @@ void setup() {
   // only start listening to the sensors now the system is ready, so that
   // anything that happens during start up is never recorded
   // crank sensor
-  pinMode(CRANK_PIN, INPUT);
+  pinMode(CRANK_PIN, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(CRANK_PIN), crankInterrupt, FALLING);
   // wheel sensor
-  pinMode(WHEEL_PIN, INPUT);
+  pinMode(WHEEL_PIN, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(WHEEL_PIN), wheelInterrupt, FALLING);
   // activate system ready LED
   digitalWrite(SYSTEM_READY_LED_PIN, HIGH);
@@ -91,6 +95,9 @@ void loop() {
 
   // show crank activity LED
   digitalWrite(CRANK_ACTIVITY_LED_PIN, (current_loop_time - crank_interrupt_current_time <= CRANK_PASS_ACTIVITY_DELAY ? HIGH : LOW));
+
+  // show wheel activity LED
+  digitalWrite(WHEEL_ACTIVITY_LED_PIN, (current_loop_time - wheel_interrupt_current_time <= WHEEL_PASS_ACTIVITY_DELAY ? HIGH : LOW));
 
   // calculate crank speed, which stays at zero until the sensor has been
   // passed twice, as one pass on its own cannot tell us how long a turn took
@@ -193,6 +200,6 @@ void motor_demand(float demand) {
   demand = constrain(demand, 0.0, 1.0);
   // servo signal: the ESC on the big rig, the speedometer needle on the mini rig
   esc.writeMicroseconds(esc_neutral + demand * (esc_full_power - esc_neutral));
-  // pwm signal: the motor MOSFET on the mini rig
+  // pwm signal: the motor driver on the mini rig
   analogWrite(MOTOR_LOAD_PIN, demand * 255);
 }
