@@ -1,11 +1,12 @@
 % The Adafruit DRV8833 motor driver breakout, seen from above with its
-% headers soldered on, and the five connections the mini rig uses. Pin and
+% headers soldered on, and the six connections the mini rig uses. Pin and
 % terminal positions are taken from Adafruit's board file
 % (github.com/adafruit/Adafruit-DRV8833-Motor-Driver-Breakout-PCB), in mm.
 \documentclass[border=2pt]{standalone}
 \usepackage[svgnames]{xcolor}
 \usepackage{tikz}
-\definecolor{signal}{RGB}{245,195,0}
+% the AIN1 wire is blue, as on the rig's cable
+\definecolor{ain1}{RGB}{30,110,230}
 \definecolor{pcb}{RGB}{28,58,135}
 
 \begin{document}
@@ -36,7 +37,7 @@
     %% pin names, as on the silkscreen; the ones we use are bright
     \foreach \y/\name/\style in {20.32/VM/unused, 17.78/GND/pinlabel,
             15.24/FLT/unused, 12.7/BIN1/unused, 10.16/BIN2/unused,
-            7.62/SLP/pinlabel, 5.08/AIN2/unused, 2.54/AIN1/pinlabel}
+            7.62/SLP/pinlabel, 5.08/AIN2/pinlabel, 2.54/AIN1/pinlabel}
         \node[\style, anchor=west] at (1.6, \y) {\name};
     \foreach \y/\name/\style in {17.78/BS/unused, 15.24/AS/unused,
             12.7/BOUT1/unused, 10.16/BOUT2/unused,
@@ -52,9 +53,12 @@
     \node[pinlabel, font=\sffamily\scriptsize] at (3.4, 22.4) {+};
     \node[pinlabel, font=\sffamily\scriptsize] at (10.8, 22.4) {$-$};
 
-    %% from the Arduino and the breadboard
-    \draw[wire, draw=signal] (0.254, 2.54) -- (-12, 2.54);
+    %% from the Arduino and the breadboard. AIN2 has its own black wire to
+    %% GND, as well as the GND pin
+    \draw[wire, draw=ain1] (0.254, 2.54) -- (-12, 2.54);
     \node[label, anchor=east] at (-12, 2.54) {Arduino D10};
+    \draw[wire, draw=black] (0.254, 5.08) -- (-12, 5.08);
+    \node[label, anchor=east] at (-12, 5.08) {GND};
     \draw[wire, draw=Red] (0.254, 7.62) -- (-12, 7.62);
     \node[label, anchor=east] at (-12, 7.62) {+5V};
     \draw[wire, draw=black] (0.254, 17.78) -- (-12, 17.78);

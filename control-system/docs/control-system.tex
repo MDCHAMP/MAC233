@@ -192,7 +192,7 @@ We will now build the electronics in five steps, adding one or two components ea
     \textbf{If not\ldots}: if something doesn't match, stop and fix it before moving on. Because only one thing has changed since the last step worked, the fault is almost certainly in what you just added.
 }
 
-The figures show one way of laying out the breadboard. Use them as a guide: you can put components in any rows you like, as long as the connections are the same. All the figures use the same colours: red wires carry +5V, black wires are GND, and yellow wires carry signals. For every LED, the long leg goes towards the resistor and the short leg into the GND rail.
+The figures show one way of laying out the breadboard. Use them as a guide: you can put components in any rows you like, as long as the connections are the same. All the figures use the same colours: red wires carry +5V, black wires are GND, and yellow wires carry signals. The servo and the motor driver keep the colours of their own cables. For every LED, the long leg goes towards the resistor and the short leg into the GND rail.
 
 \subsection{Step 1: power and the system ready LED}
 \begin{figure}[ht!]
@@ -288,12 +288,12 @@ The Arduino tells the driver how hard to run the motor with a PWM signal on D10,
     \begin{center}
         \includegraphics[width=.6\textwidth]{../images/motor-driver.pdf}
     \end{center}
-    \caption{The motor driver board, seen from above. Only the pins with bright labels are used: three come from the breadboard, the 9V battery clips onto the battery snap soldered to the top of the board, and the motor connects to the two outputs on the right.}
+    \caption{The motor driver board, seen from above. Only the pins with bright labels are used: four come from the breadboard, the 9V battery clips onto the battery snap soldered to the top of the board, and the motor connects to the two outputs on the right.}
     \label{fig:motor-driver}
 \end{figure}
 
 
-\textbf{Build} (Figure \ref{fig:step-5}): connect the motor driver: AIN1\textrightarrow Arduino D10, SLP\textrightarrow +5V, GND\textrightarrow GND. The motor itself and its power supply connect to the driver, not to the breadboard.
+\textbf{Build} (Figure \ref{fig:step-5}): connect the motor driver: AIN1 (blue)\textrightarrow Arduino D10, SLP (red)\textrightarrow +5V, GND (black)\textrightarrow GND, AIN2 (black)\textrightarrow GND. Note that the driver has two black wires, and both go to GND. The motor itself and its power supply connect to the driver, not to the breadboard.
 
 \textbf{Predict}: you turn the crank steadily by hand. What will the wheel do, and how will it compare with the servo needle?
 

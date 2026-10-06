@@ -52,8 +52,11 @@
 \newcommand{\rowx}[1]{{1.356+(#1)}}
 
 % wire colours: red for +5V, black for GND, yellow for signals. The servo
-% keeps its own cable colours (brown, red, orange), as in lab 3
+% keeps its own cable colours (brown, red, orange), as in lab 3, and the motor
+% driver's AIN1 wire is blue, as on the rig's cable
 \definecolor{signal}{RGB}{245,195,0}
+\definecolor{ain1}{RGB}{30,110,230}
+\definecolor{pcb}{RGB}{28,58,135}
 
 \tikzset{
     jumper/.style={line width=.9mm, rounded corners=.9mm},
@@ -227,17 +230,20 @@
         \toppin{4}{D9}
     }
 
-    %% step 5: motor driver on D10 (AIN1), with SLP held at +5V
+    %% step 5: motor driver on D10 (AIN1), with SLP held at +5V and AIN2
+    %% on its own wire to GND. The pins are in the same order as on the board
     \forstep{5}{
-        \filldraw[fill=RoyalBlue, draw=black, line width=.3mm, rounded corners=.5mm]
-            (0.1, 23.2) rectangle (4.5, 24.8);
-        \node[pinlabel] at (0.9, 23.6) {GND};
-        \node[pinlabel] at (2.2, 23.6) {SLP};
-        \node[pinlabel] at (3.5, 23.6) {AIN1};
-        \node[label, anchor=south] at (2.3, 24.9) {motor driver};
-        \offboard{leadgnd}{0.9}{\rowx{1}}{19.5}{\hole{1}{tm}}
-        \offboard{lead5v}{2.2}{\rowx{1.5}}{18.55}{\hole{2}{tp}}
-        \offboard{lead, draw=BlueViolet}{3.5}{\rowx{2.5}}{16.9}{\hole{3}{j}}
+        \filldraw[fill=pcb, draw=black, line width=.3mm, rounded corners=.5mm]
+            (-0.5, 23.2) rectangle (4.5, 24.8);
+        \node[pinlabel] at (0.4, 23.6) {GND};
+        \node[pinlabel] at (1.5, 23.6) {SLP};
+        \node[pinlabel] at (2.6, 23.6) {AIN2};
+        \node[pinlabel] at (3.7, 23.6) {AIN1};
+        \node[label, anchor=south] at (2, 24.9) {motor driver};
+        \offboard{leadgnd}{0.4}{\rowx{1}}{19.5}{\hole{1}{tm}}
+        \offboard{lead5v}{1.5}{\rowx{1.5}}{18.55}{\hole{2}{tp}}
+        \offboard{leadgnd}{2.6}{\rowx{2}}{19.5}{\hole{2}{tm}}
+        \offboard{lead, draw=ain1}{3.7}{\rowx{2.5}}{16.9}{\hole{3}{j}}
         \toppin{3}{D10}
     }
 \end{tikzpicture}%
