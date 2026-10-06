@@ -1,9 +1,9 @@
 /**
  *  Original Author: D S Brennan (github.com/dsbrennan)
  *  Created: 29/08/2023
- *  Updated: 10/08/2026 (M D Champneys)
+ *  Maintained by: M D Champneys (max.champneys@sheffield.ac.uk)
  *
- *  Copyright 2023 - 2026, MIT Licence
+ *  Copyright 2023-2026, MIT Licence
  **/
 
 //////////////////////////////////////////////////////////////
