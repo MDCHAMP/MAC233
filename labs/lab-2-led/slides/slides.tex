@@ -15,6 +15,23 @@
 \usetikzlibrary{backgrounds}
 \usetikzlibrary{decorations.pathreplacing}
 
+% Breadboard connection diagrams, as in the worksheet: a wire drawn through the
+% centres of every hole that is connected together. Coordinates are fractions
+% of the breadboard image, (0,0) bottom left and (1,1) top right.
+\tikzset{
+    wire/.style={line width=.8mm},
+}
+% one numbered row: its two groups of five (A-E and F-J)
+\newcommand{\rowwire}[1]{%
+    \pgfmathsetmacro{\rowy}{0.92940 - (#1-1)*0.030014}%
+    \draw[wire] (0.2109, \rowy) -- (0.4343, \rowy);
+    \draw[wire] (0.5458, \rowy) -- (0.7692, \rowy);
+}
+% one power rail, takes the x-fraction of the column
+\newcommand{\railwire}[1]{%
+    \draw[wire] (#1, 0.048) -- (#1, 0.941);
+}
+
 % the drgtheme files live once at the repo root, in ../../../theme/
 \makeatletter
 \def\input@path{{../../../theme/}}
@@ -169,11 +186,47 @@ void loop() {
 
 \end{frame}
 
+\begin{frame}{The Breadboard}
+    \begin{columns}[T]
+        \begin{column}{.45\textwidth}
+            \centering
+            \includegraphics[height=.7\textheight]{../images/breadboard.png}\\
+            \small The board as you see it.
+        \end{column}
+        \begin{column}{.45\textwidth}
+            \centering
+            \begin{tikzpicture}
+                %%breadboard
+                \node[anchor=south west, inner sep=0] (bb) at (0, 0)
+                    {\includegraphics[height=.7\textheight]{../images/breadboard.png}};
+                \begin{scope}[x={(bb.south east)}, y={(bb.north west)}]
+                    %% every numbered row
+                    \foreach \r in {1,...,30}{ \rowwire{\r} }
+                    %% all four power rails
+                    \railwire{0.0835}
+                    \railwire{0.1410}
+                    \railwire{0.8583}
+                    \railwire{0.9155}
+                \end{scope}
+            \end{tikzpicture}\\
+            \small The hidden connections drawn in.
+        \end{column}
+    \end{columns}
+    \vfill
+    \tiny
+    Breadboard source: \url{https://freesvg.org/breadboard}.
+\end{frame}
+
 \begin{frame}{Wiring Diagram}
-    \vspace{-.5em}
+    \begin{columns}[c]
+    \begin{column}{.35\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../images/wiring-diagram.png}
+    \end{column}
+    \begin{column}{.6\textwidth}
     \begin{center}
         \begin{tikzpicture}[
-            scale=1.65, transform shape, rotate=90,
+            scale=1.2, transform shape, rotate=90,
             wire/.style={line width=.8mm},
             leg/.style={draw=DimGray},
             jumper/.style={draw=LimeGreen},
@@ -198,6 +251,9 @@ void loop() {
 
         \end{tikzpicture}
     \end{center}
+    \end{column}
+    \end{columns}
+    \vfill
     \tiny
     Breadboard source: \url{https://freesvg.org/breadboard}, Resistor source \url{https://freesvg.org/resistor-330-ohm}.
 \end{frame}
