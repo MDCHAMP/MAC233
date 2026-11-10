@@ -74,8 +74,8 @@
             \node[pastnode, above] at (-2, 0.5) {Servo};
             \node[pastnode, above] at (0, 0.5) {Hall Effect\\Sensors};
             \node[currentnode, above] at (2, 0.5) {Phases\\0 and 1};
-            \node[futurenode, above] at (4, 0.5) {Phase 1};
-            \node[futurenode, above] at (6, 0.5) {Phase 2};
+            \node[futurenode, above] at (4, 0.5) {Phase 2};
+            \node[futurenode, above] at (6, 0.5) {Catch-up/\\drop-in};
 
             % phases
             \draw[timeline, decorate, decoration={brace, amplitude=6pt, mirror}] (-6, -1.6) -- (0.9, -1.6);
@@ -87,37 +87,7 @@
     \end{center}
 \end{frame}
 
-\begin{frame}{The next three weeks}
-    \large
-    \begin{center}
-        \begin{tabular}{lll}
-            \textbf{Week} & \textbf{Phase} & \textbf{Mini rig?} \\
-            \hline
-            7 & 0: how the control system works & No \\
-              & 1: build steps 1--3 & No, use a magnet \\
-            8 & 1: build steps 4--5 & Only for step 5 \\
-            9 & 2: developing the control system & Yes \\
-        \end{tabular}
-    \end{center}
-    \vspace{1em}
-    Your rig isn't finished? That's fine: steps 1--4 only need your Arduino kit and a magnet.
-\end{frame}
-
-\begin{frame}{The mini rig}
-    \begin{center}
-        \includegraphics[height=.75\textheight]{mini-rig.pdf}
-    \end{center}
-\end{frame}
-
-\begin{frame}{The control system}
-    \begin{center}
-        \includegraphics[width=\textwidth]{block-diagram.pdf}
-    \end{center}
-    \vspace{.5em}
-    Only help while the rider is pedalling, and never above 25\,km/h.
-\end{frame}
-
-\begin{frame}{Building it: one part at a time}
+\begin{frame}{Integration hell}
     \Large
     Build everything, then test it: if it doesn't work, where is the fault?
 
@@ -143,15 +113,57 @@
     \end{center}
 \end{frame}
 
+
+
 \begin{frame}{Today}
-    \Large
-    \textbf{Phase 0}: read through the sketch, then answer the check questions with a partner.
+    \large
+    \textbf{Phase 0}: Software. Read through and \emph{understand} \texttt{control-system.ino} then answer the check questions in your groups.
 
     \vspace{1em}
-    \textbf{Phase 1}: build steps 1--3 on the bench. Pass the magnet by hand to test the sensors.
+    \textbf{Phase 1}: Electronics. Build each component in steps 1--5, testing each one before moving on. Steps 1--4 are on the bench (pass the magnet by hand to test the sensors); step 5 moves onto your mini rig.
 
     \vspace{1em}
-    Upload the sketch once, at the start of step 1. You won't change it until Phase 2.
+    {\color{lightgray}
+    \textbf{Phase 2} Integration (next week): test the example controller on the mini-rig, then alter the sketch to make it better.
+    }
+\end{frame}
+
+\begin{frame}{\texttt{control-system.ino}}
+    \large
+    We provide to you a complete sketch of a basic control system, \texttt{control-system.ino}
+    \vspace{1em}
+    \begin{itemize}
+        \item reads hall effect sensors to compute speeds 
+        \item decides how much power to send to the motor
+        \item outputs to LEDs and the serial montior
+    \end{itemize}
+    \vspace{1em}
+    It works on both the mini rig (Autumn semester) and the big rigs (Spring Semester).
+
+    \vspace{1em}
+    Upload it to the arduino once, at the start of phase 1. No need to change it until Phase 2.
+\end{frame}
+
+
+
+\begin{frame}{Phase 0: Software}
+    \begin{center}
+        \includegraphics[width=\textwidth]{block-diagram.pdf}
+    \end{center}
+    \vspace{.5em}
+    Only help while the rider is pedalling, and never above 25\,km/h.
+\end{frame}
+
+\begin{frame}{Phase 1: Electronics}
+    \begin{center}
+        \includegraphics[height=.8\textheight]{wiring-complete.pdf}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Hardware}
+    \begin{center}
+        \includegraphics[height=.75\textheight]{mini-rig.pdf}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Help}
@@ -180,8 +192,11 @@
         \end{column}
     \end{columns}
 
-    \vspace{3.5em}
+    \vspace{2.5em}
     Problems? Raise your hand and someone will come and help you.
+    \vspace{1em}
+    
+    Errors? Let me know and win some prizes!
 \end{frame}
 
 \end{document}
