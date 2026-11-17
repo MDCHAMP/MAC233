@@ -279,7 +279,7 @@ Once your mini rig is ready, fix the crank and wheel sensors to it so that their
 The Arduino can't power the motor itself: its pins can only supply a tiny current, far less than a motor needs, and a motor can send voltage spikes back that would damage the Arduino. A motor driver sits between the two. It takes its power from a separate supply that is big enough for the motor, and uses the small signal from the Arduino to decide how much of that power to pass on. For this external power supply, we will be using a 9V battery. 
 
 \warning{%
-    \textbf{\textcolor{red}{Warning: 9V will destroy your Arduino.}} The 9V battery only ever clips onto the battery snap soldered to the motor driver. Never connect it to the breadboard: the Arduino runs on 5V, and 9V on the +5V rail will damage it permanently. While the battery is connected, don't let the motor driver's pins touch the Arduino or the breadboard either: some of them carry the battery's 9V. Ask a GTA to check your wiring before you clip the battery on for the first time.
+    \textbf{\textcolor{red}{Warning: 9V will destroy your Arduino.}} The 9V battery only ever clips onto the battery snap soldered to the motor driver. Never connect it to the breadboard: the Arduino runs on 5V, and 9V on the +5V rail will damage it permanently. While the battery is connected, don't let the motor driver's pins touch the Arduino or the breadboard either: some of them carry the battery's 9V.
 }
 
 The Arduino tells the driver how hard to run the motor with a PWM signal on D10, set from the motor demand: the higher the demand, the more power the motor gets. Figure \ref{fig:motor-driver} shows the driver board and the connections we use.
