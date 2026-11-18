@@ -88,14 +88,27 @@
 \end{frame}
 
 \begin{frame}{Today}
-    \Large
-    Everything is built and tested. Today: how good is the example controller, and how could you make it better?
+    \large
+    {\color{lightgray}
+    \textbf{Phase 0}: Software. Read through and understand \texttt{control-system.ino}.
 
     \vspace{1em}
-    Not finished step 5 yet? Do that first.
+    \textbf{Phase 1}: Electronics. Build and test steps 1--5, ending on your mini rig.
+    }
 
     \vspace{1em}
-    Next week is a catch-up / drop-in session: come along if you need more time or help.
+    \textbf{Phase 2}: Integration. Test the example controller on your mini rig: how good is it? Then alter the sketch to make it better.
+
+    \vspace{1.5em}
+    Finish phase 1 first. Next week is a catch-up / drop-in session: come along if you need more time or help.
+\end{frame}
+
+\begin{frame}{Phase 2: Integration}
+    \begin{center}
+        \includegraphics[width=\textwidth]{block-diagram.pdf}
+    \end{center}
+    \vspace{.5em}
+    Everything is built and tested. Today you only change the controller.
 \end{frame}
 
 \begin{frame}{Testing the example controller}
@@ -103,10 +116,7 @@
     \textbf{Predict}: sketch the motor demand and the wheel speed against time.
 
     \vspace{1em}
-    \textbf{Test}: turn the crank about once a second for 20 seconds, then stop.
-
-    \vspace{1em}
-    \textbf{Compare}: copy the serial monitor output and plot it. Does it match your sketch?
+    \textbf{Test}: turn the crank about once a second for 20 seconds, then stop. Copy the serial monitor output and plot it. Does it match your sketch?
 \end{frame}
 
 % the worksheet's figure, one panel per slide: the top panel (demand) and
@@ -121,8 +131,6 @@
     \begin{center}
         \includegraphics[width=\textwidth, trim=0 0 0 155pt, clip]{want-vs-get.pdf}
     \end{center}
-    \small
-    Dashed: what we want. Solid: what we get.
 \end{frame}
 
 \begin{frame}{Three problems}
@@ -137,44 +145,69 @@
 \end{frame}
 
 \begin{frame}{Your turn}
-    \Large
-    Change anything between the two lines of slashes in `loop'. Leave the \texttt{DO NOT CHANGE} block alone.
-
-    \vspace{1em}
     \large
+    Change anything between the two lines of slashes in the loop function. 
+
+    \vspace{.5em}
+    \normalsize
     \begin{itemize}
-        \setlength{\itemsep}{.5em}
+        \setlength{\itemsep}{.3em}
         \item Start the ramp from where your motor starts to turn.
         \item Ease off as the bike gets close to 25\,km/h.
         \item Change the ramp rates.
     \end{itemize}
 
-    \vspace{1em}
-    \Large
-    Same method as Phase 1: one change at a time, predict, test, compare.
+    \vspace{.5em}
+    \begin{center}
+        \begin{tikzpicture}[
+            stage/.style={draw, line width=.4mm, rounded corners=1mm,
+                minimum width=2.4cm, minimum height=1cm, font=\large},
+            arrow/.style={->, line width=.4mm},
+        ]
+            \node[stage] (build) at (0, 0) {Change};
+            \node[stage] (predict) at (3.2, 0) {Predict};
+            \node[stage] (test) at (6.4, 0) {Test};
+            \node[stage, text=purple] (ifnot) at (9.6, 0) {If not\ldots};
+            \draw[arrow] (build) -- (predict);
+            \draw[arrow] (predict) -- (test);
+            \draw[arrow] (test) -- (ifnot);
+            \draw[arrow] (test.north) to[out=110, in=70] node[above, font=\normalsize]
+                {next change} (build.north);
+        \end{tikzpicture}
+    \end{center}
 \end{frame}
 
 \begin{frame}{Help}
     \normalsize
     \begin{columns}
-        \begin{column}{.5\textwidth}
+        \begin{column}{.33\textwidth}
             \begin{center}
                 \textbf{Worksheet}\\
                 \vspace{.5em}
                 \qrcode[hyperlink, height=3cm]{https://github.com/MDCHAMP/MAC233/blob/main/control-system/docs/control-system.pdf}
             \end{center}
         \end{column}
-        \begin{column}{.5\textwidth}
+        \begin{column}{.33\textwidth}
             \begin{center}
                 \textbf{Sketch}\\
                 \vspace{.5em}
                 \qrcode[hyperlink, height=3cm]{https://github.com/MDCHAMP/MAC233/blob/main/control-system/control-system.ino}
             \end{center}
         \end{column}
+        \begin{column}{.33\textwidth}
+            \begin{center}
+                \textbf{Nano Every pinout}\\
+                \vspace{.5em}
+                \qrcode[hyperlink, height=3cm]{https://docs.arduino.cc/resources/pinouts/ABX00028-full-pinout.pdf}
+            \end{center}
+        \end{column}
     \end{columns}
 
-    \vspace{3.5em}
+    \vspace{2.5em}
     Problems? Raise your hand and someone will come and help you.
+    \vspace{1em}
+
+    Errors? Let me know and win some prizes!
 \end{frame}
 
 \end{document}
